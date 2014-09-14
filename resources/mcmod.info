@@ -1,0 +1,21 @@
+{
+  "modListVersion": 2,
+  "modList": [{
+    "modid": "ThaumicNei",
+    "name": "Thaumic NEI",
+    "description": "An NEI plugin for Thaumcraft",
+    "version": "@VERSION@",
+    "mcversion": "@MC_VERSION@",
+    "url": "http://austinv11.com",
+    "updateUrl": "",
+    "authorList": ["austinv11"],
+    "credits": "Authored by austinv11",
+    "logoFile": "",
+    "screenshots": [],
+    "parent": "",
+    "requiredMods": ["Forge"],
+    "dependencies": [],
+    "dependants": [],
+    "useDependencyInformation": false
+  }]
+}
