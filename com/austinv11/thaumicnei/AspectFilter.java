@@ -1,15 +1,11 @@
 package com.austinv11.thaumicnei;
 
-import codechicken.nei.NEIClientConfig;
 import codechicken.nei.SearchField;
 import codechicken.nei.api.ItemFilter;
 import com.austinv11.thaumicnei.utils.Logger;
 import net.minecraft.item.ItemStack;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
-
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 public class AspectFilter implements SearchField.ISearchProvider {
 
@@ -41,11 +37,28 @@ public class AspectFilter implements SearchField.ISearchProvider {
 				if (aspectSearch){
 					AspectList list = new AspectList(itemStack);
 					if (list != null){
+						String[] patterns = pattern.split(",");
 						for (Aspect aspect : list.getAspects()) {
 							if (aspect != null){
-								if (pattern.equalsIgnoreCase(aspect.getName())) {
-									return true;
+								boolean result = false;
+								for (String p : patterns){
+									if (p.contains(" ")){
+										String[] p2 = p.split(" ");
+										boolean isInt;
+										try{
+
+											isN
+										}catch (Exception e){
+											isInt = false;
+										}
+										if ()
+										}else {
+										if (p.equalsIgnoreCase(aspect.getName())) {
+											result = true;
+										}
+									}
 								}
+								return result;
 							}
 						}
 					}
