@@ -1,6 +1,5 @@
 package com.austinv11.thaumicnei;
 
-import com.austinv11.thaumicnei.events.ScanEventHandler;
 import com.austinv11.thaumicnei.proxy.IProxy;
 import com.austinv11.thaumicnei.reference.Reference;
 import com.austinv11.thaumicnei.utils.ConfigurationHandler;
@@ -11,9 +10,6 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.common.MinecraftForge;
-import thaumcraft.api.ThaumcraftApi;
-
 //FIXME mcmod.info
 @Mod(modid= Reference.MOD_ID,name = Reference.MOD_NAME,version = Reference.VERSION, dependencies = "after:NotEnoughItems;after:Thaumcraft")
 public class ThaumicNEI {
@@ -29,7 +25,6 @@ public class ThaumicNEI {
 		//Logger.info(Reference.VERSION);
 		ConfigurationHandler.init(event.getSuggestedConfigurationFile());
 		FMLCommonHandler.instance().bus().register(new ConfigurationHandler());
-		ThaumcraftApi.registerScanEventhandler(new ScanEventHandler());
 	}
 
 	@Mod.EventHandler
