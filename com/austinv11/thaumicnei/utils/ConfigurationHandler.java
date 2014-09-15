@@ -31,7 +31,8 @@ public class ConfigurationHandler {
 			boolean hideNonResearched = config.get(Configuration.CATEGORY_GENERAL, "hideNonResearchedItems", true, "If set to true, all non-researched items will be hidden from NEI").getBoolean(true);
 			boolean cheatMode = config.get(Configuration.CATEGORY_GENERAL, "cheatMode", false, "If set to true, you could search by aspect and see recipes of all items without needing to have scanned/researched them").getBoolean(false);
 			boolean showAspectRecipes = config.get(Configuration.CATEGORY_GENERAL, "showAspectRecipes", false, "If set to true, this mod will add items which represent aspects and display how to create the respective aspect").getBoolean(false);
-			reSyncConfig(hideNonResearched, cheatMode, showAspectRecipes);
+			boolean showThaumcraftItems = config.get(Configuration.CATEGORY_GENERAL, "showThaumcraftItems", true, "If set to false, this mod will hide all (except a select few) thaumcraft-related items from NEI").getBoolean(true);
+			reSyncConfig(hideNonResearched, cheatMode, showAspectRecipes, showThaumcraftItems);
 		}catch (Exception e){
 			Logger.warn("Config exception!");
 			Logger.warn(e.getStackTrace());
@@ -42,9 +43,10 @@ public class ConfigurationHandler {
 		}
 	}
 
-	private static void reSyncConfig(boolean v1, boolean v2, boolean v3){
+	private static void reSyncConfig(boolean v1, boolean v2, boolean v3, boolean v4){
 		Config.hideNonResearched = v1;
 		Config.cheatMode = v2;
 		Config.showAspectRecipes = v3;
+		Config.showThaumcraftItems = v4;
 	}
 }

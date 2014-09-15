@@ -1,4 +1,4 @@
-package com.austinv11.thaumicnei;
+package com.austinv11.thaumicnei.filters;
 
 import codechicken.nei.NEIClientConfig;
 import codechicken.nei.SearchField;
