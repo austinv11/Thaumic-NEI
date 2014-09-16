@@ -5,23 +5,30 @@ import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import com.austinv11.thaumicnei.reference.Reference;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 import thaumcraft.api.ThaumcraftApi;
+import thaumcraft.api.ThaumcraftApiHelper;
+import thaumcraft.api.aspects.Aspect;
+import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.ShapedArcaneRecipe;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static thaumcraft.api.aspects.Aspect.*;
 
 public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 
 	@Override
 	public String getGuiTexture() {
-		return Reference.MOD_ID+":textures/gui/gui_arcaneworkbench.png";
+		return "thaumicnei:gui/gui_arcaneworkbench.png";
 	}
 
 	@Override
 	public String getRecipeName() {
-		return StatCollector.translateToLocal("gui.nei.arcaneWorkbench.shaped");
+		return StatCollector.translateToLocal("thaumicnei:gui.nei.arcaneWorkbench.shaped");
 	}
 
 	@Override
@@ -32,9 +39,8 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 	@Override
 	public void drawBackground(int recipe) {
 		GL11.glColor4f(1, 1, 1, 1);
-		GuiDraw.changeTexture(this.getGuiTexture());
-		GuiDraw.drawTexturedModalRect(6, 32, 13, 0, 13, 13);
-		GuiDraw.drawTexturedModalRect(6, 67, 0, 0, 13, 20);
+		GuiDraw.changeTexture(getGuiTexture());
+		GuiDraw.drawTexturedModalRect(0, 0, 5, 11, 166, 130);
 	}
 
 	@Override
@@ -43,24 +49,45 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 	}
 
 	@Override
+	public void drawExtras(int recipe) {
+		CachedShapedArcaneWorkbenchRecipe r = (CachedShapedArcaneWorkbenchRecipe) arecipes.get(recipe);
+		for (Aspect aspect : r.aspects.getAspects()){
+			if (aspect.isPrimal()) {
+				if (aspect.getName().equalsIgnoreCase("ignis")) {//Oh no, no switch statement! D:
+
+				}else if (aspect.getName().equalsIgnoreCase("ignis")) {
+
+				}
+			}
+		}
+	}
+
+	@Override
 	public void loadCraftingRecipes(ItemStack result) {
 		List recipes = ThaumcraftApi.getCraftingRecipes();
 		for (int i = 0; i < recipes.size(); i++){//Sorry, no enhanced for loop here :P
-			if (recipes.get(i) instanceof ShapedArcaneRecipe){
-
+			if (recipes.get(i) instanceof ShapedArcaneRecipe) {
+				ShapedArcaneRecipe recipe = (ShapedArcaneRecipe) recipes.get(i);
+				//if (ThaumcraftApiHelper.isResearchComplete("", recipe.getResearch())){TODO
+					if (recipe.getRecipeOutput().isItemEqual(result)) {
+						this.arecipes.add(new CachedShapedArcaneWorkbenchRecipe(recipe));
+					}
+				//}
 			}
 		}
 	}
 
 	public class CachedShapedArcaneWorkbenchRecipe extends CachedRecipe{
-		private final int[] outCoords = {0,0};
-		private final int[] inCoords = {0,0,0,0,0,0};//3 x coords, then 3 y coords
+		private final int[] outCoords = {150,25};
+		private final int[] inCoords = {20,60,90,40,70,100};//3 x coords, then 3 y coords
 
 		private PositionedStack output;
-		private List<PositionedStack> inputs;
-		private List<PositionedStack> otherInputs;
+		private List<PositionedStack> inputs = new ArrayList<PositionedStack>();
+
+		public AspectList aspects;
 
 		public CachedShapedArcaneWorkbenchRecipe(ShapedArcaneRecipe recipe){//Wow that's a long class name!
+			this.aspects = recipe.getAspects();
 			this.output = new PositionedStack(recipe.getRecipeOutput(), outCoords[0], outCoords[1]);
 			Object[] input = recipe.getInput();
 			int i = 0;
@@ -100,7 +127,6 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 					i++;
 				}
 			}
-			
 		}
 
 		@Override
@@ -111,11 +137,6 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 		@Override
 		public List<PositionedStack> getIngredients() {
 			return this.inputs;
-		}
-
-		@Override
-		public List<PositionedStack> getOtherStacks(){
-			return this.otherInputs;
 		}
 	}
 }
