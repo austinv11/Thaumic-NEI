@@ -5,6 +5,7 @@ import codechicken.nei.SearchField;
 import codechicken.nei.api.ItemFilter;
 import com.austinv11.thaumicnei.utils.Logger;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 
@@ -26,10 +27,10 @@ public class AspectFilter implements SearchField.ISearchProvider {
 
 		public Filter(String searchText) {
 			//Logger.info("Searching! :D");
-			if (searchText.startsWith("@aspect:") && searchText.length() > 8) {
+			if (searchText.startsWith("@"+StatCollector.translateToLocal("filter.aspect.0")+":") && searchText.length() > 8) {
 				pattern = searchText.substring(8);
 				aspectSearch = 1;
-			}else if (searchText.startsWith("@aspects:") && searchText.length() > 9){
+			}else if (searchText.startsWith("@"+StatCollector.translateToLocal("filter.aspect.1")+":") && searchText.length() > 9){
 				pattern = searchText.substring(9);
 				aspectSearch = 2;
 			}else{
