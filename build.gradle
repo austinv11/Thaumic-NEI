@@ -9,6 +9,14 @@ buildscript {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        maven { // The repo from which to get waila
+            name "Mobius Repo"
+            url "http://mobiusstrip.eu/maven"
+        }
+        maven { // the repo from which to get NEI and stuff
+            name 'CB Repo'
+            url "http://chickenbones.net/maven/"
+        }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
@@ -39,6 +47,7 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    compile "mcp.mobius.waila:Waila:1.5.4a_1.7.10"
 }
 
 processResources

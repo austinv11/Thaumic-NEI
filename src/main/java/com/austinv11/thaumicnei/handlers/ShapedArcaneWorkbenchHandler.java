@@ -23,7 +23,7 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 
 	@Override
 	public String getGuiTexture() {
-		return "thaumicnei:gui/gui_arcaneworkbench.png";
+		return "thaumicnei:textures/gui/gui_arcaneworkbench.png";
 	}
 
 	@Override
