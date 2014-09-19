@@ -96,6 +96,26 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 		}
 	}
 
+	@Override
+	public void loadUsageRecipes(ItemStack ingredient) {
+		List recipes = ThaumcraftApi.getCraftingRecipes();
+		for (int i = 0; i < recipes.size(); i++) {//Sorry, no enhanced for loop here again :P
+			if (recipes.get(i) instanceof ShapedArcaneRecipe) {
+				ShapedArcaneRecipe recipe = (ShapedArcaneRecipe) recipes.get(i);
+				//if (ThaumcraftApiHelper.isResearchComplete("", recipe.getResearch())){TODO
+				for (Object o : recipe.getInput()) {
+					if (o instanceof ItemStack) {
+						ItemStack item = (ItemStack) o;
+						if (item.isItemEqual(ingredient)){
+							this.arecipes.add(new CachedShapedArcaneWorkbenchRecipe(recipe));
+						}
+					}
+				}
+				//}
+			}
+		}
+	}
+
 	public class CachedShapedArcaneWorkbenchRecipe extends CachedRecipe{
 		private final int[] outCoords = {139,54};
 		private final int[] inCoords = {29,53,77,56,63,85};//3 x coords, then 3 y coords
