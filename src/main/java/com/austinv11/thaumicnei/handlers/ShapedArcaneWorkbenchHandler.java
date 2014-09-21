@@ -52,30 +52,44 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 		CachedShapedArcaneWorkbenchRecipe r = (CachedShapedArcaneWorkbenchRecipe) arecipes.get(recipe);
 		for (Aspect aspect : r.aspects.getAspects()){
 			if (aspect.isPrimal()) {
+				int coords[] = {0,0,0,0,260,260};
+				int textCoords[] = {0,0};
+				if (aspect.getName().equalsIgnoreCase("Ignis")) {//Oh no, no switch statement! D:
+					coords[0] = 78;
+					coords[1] = 1281;
+					textCoords[0] = 8;
+					textCoords[1] = 101;
+				}else if (aspect.getName().equalsIgnoreCase("Aer")) {
+					coords[0] = 808;
+					coords[1] = 48;
+					textCoords[0] = 68;
+					textCoords[1] = 17;
+				}else if (aspect.getName().equalsIgnoreCase("Terra")) {
+					coords[0] = 78;
+					coords[1] = 387;
+					textCoords[0] = 8;
+					textCoords[1] = 43;
+				}else if (aspect.getName().equalsIgnoreCase("Aqua")) {
+					coords[0] = 808;
+					coords[1] = 1621;
+					textCoords[0] = 68;
+					textCoords[1] = 98;
+				}else if (aspect.getName().equalsIgnoreCase("Ordo")) {
+					coords[0] = 1540;
+					coords[1] = 1281;
+					textCoords[0] = 104;
+					textCoords[1] = 101;
+				}else if (aspect.getName().equalsIgnoreCase("Perditio")) {
+					coords[0] = 1540;
+					coords[1] = 387;
+					textCoords[0] = 104;
+					textCoords[1] = 43;
+				}
+				GuiDraw.drawString(r.aspects.getAmount(aspect)+"", textCoords[0], textCoords[1], 0xFFFFFF, true);
 				Color color = new Color(aspect.getColor());
 				GL11.glColor4f(color.getRed()/255f, color.getGreen()/255f, color.getBlue()/255f, 1f);
 				GuiDraw.changeTexture(aspect.getImage());
 				GL11.glScalef(.065f,.065f,.065f);
-				int coords[] = {0,0,0,0,260,260};
-				if (aspect.getName().equalsIgnoreCase("Ignis")) {//Oh no, no switch statement! D:
-					coords[0] = 78;
-					coords[1] = 1281;
-				}else if (aspect.getName().equalsIgnoreCase("Aer")) {
-					coords[0] = 808;
-					coords[1] = 48;
-				}else if (aspect.getName().equalsIgnoreCase("Terra")) {
-					coords[0] = 78;
-					coords[1] = 387;
-				}else if (aspect.getName().equalsIgnoreCase("Aqua")) {
-					coords[0] = 808;
-					coords[1] = 1621;
-				}else if (aspect.getName().equalsIgnoreCase("Ordo")) {
-					coords[0] = 1540;
-					coords[1] = 1281;
-				}else if (aspect.getName().equalsIgnoreCase("Perditio")) {
-					coords[0] = 1540;
-					coords[1] = 387;
-				}
 				GuiDraw.drawTexturedModalRect(coords[0], coords[1], coords[2], coords[3], coords[4], coords[5]);
 			}
 		}
@@ -89,7 +103,9 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 				ShapedArcaneRecipe recipe = (ShapedArcaneRecipe) recipes.get(i);
 				//if (ThaumcraftApiHelper.isResearchComplete("", recipe.getResearch())){TODO
 					if (recipe.getRecipeOutput().isItemEqual(result)) {
-						this.arecipes.add(new CachedShapedArcaneWorkbenchRecipe(recipe));
+						if (checkDupe(recipe)) {
+							this.arecipes.add(new CachedShapedArcaneWorkbenchRecipe(recipe));
+						}
 					}
 				//}
 			}
@@ -106,8 +122,10 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 				for (Object o : recipe.getInput()) {
 					if (o instanceof ItemStack) {
 						ItemStack item = (ItemStack) o;
-						if (item.isItemEqual(ingredient)){
-							this.arecipes.add(new CachedShapedArcaneWorkbenchRecipe(recipe));
+						if (item.isItemEqual(ingredient)) {
+							if (checkDupe(recipe)) {
+								this.arecipes.add(new CachedShapedArcaneWorkbenchRecipe(recipe));
+							}
 						}
 					}
 				}
@@ -116,19 +134,33 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 		}
 	}
 
+	private boolean checkDupe(ShapedArcaneRecipe recipe) {
+		for (Object o : this.arecipes.toArray()){
+			if (o instanceof CachedShapedArcaneWorkbenchRecipe){
+				CachedShapedArcaneWorkbenchRecipe r = (CachedShapedArcaneWorkbenchRecipe) o;
+				if (r.recipe.getInput() == recipe.getInput()){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	public class CachedShapedArcaneWorkbenchRecipe extends CachedRecipe{
 		private final int[] outCoords = {139,54};
-		private final int[] inCoords = {29,53,77,56,63,85};//3 x coords, then 3 y coords
+		private final int[] inCoords = {29,53,77,70,77,99};//3 x coords, then 3 y coords
 
 		private PositionedStack output;
 		private List<PositionedStack> inputs = new ArrayList<PositionedStack>();
 		//private PositionedStack extra = new PositionedStack()TODO add wand extras
 
 		public AspectList aspects;
+		public ShapedArcaneRecipe recipe;
 
 		public CachedShapedArcaneWorkbenchRecipe(ShapedArcaneRecipe recipe){//Wow that's a long class name!
 			this.aspects = recipe.getAspects();
 			this.output = new PositionedStack(recipe.getRecipeOutput(), outCoords[0], outCoords[1]);
+			this.recipe = recipe;
 			Object[] input = recipe.getInput();
 			int i = 0;
 			for (Object inputItem : input){
@@ -205,5 +237,10 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 		public List<PositionedStack> getIngredients() {
 			return this.inputs;
 		}
+	}
+
+	@Override
+	public String getOverlayIdentifier(){
+		return "arcane";
 	}
 }
