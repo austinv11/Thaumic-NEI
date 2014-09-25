@@ -17,6 +17,7 @@ import thaumcraft.api.crafting.CrucibleRecipe;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CrucibleHandler extends TemplateRecipeHandler {
@@ -45,18 +46,22 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 
 		GuiDraw.changeTexture("thaumcraft:textures/gui/gui_research.png");
 		GL11.glScalef(5.25f, 5.25f, 5.25f);
-		GuiDraw.drawTexturedModalRect(0, 0, 0, 230, 24, 24);//Input Slot
-		GuiDraw.drawTexturedModalRect(140, 48, 55, 230, 24, 24);//Output Slot
+		GuiDraw.drawTexturedModalRect(35, 5, 0, 230, 24, 24);//Input Slot
+		GuiDraw.drawTexturedModalRect(140, 46, 55, 230, 24, 24);//Output Slot
 
+		GL11.glEnable(GL11.GL_BLEND);
 		GuiDraw.changeTexture(Reference.MOD_ID+":textures/gui/crucible_arrow_1.png");
-		GL11.glScalef(0.11f, 0.11f, 0.11f);
-		GL11.glRotatef(135.55f, 0f, 0f, 1f);
-		GuiDraw.drawTexturedModalRect(-500, -996, 0, 0, 250, 250);//Output Arrow
+		GL11.glScalef(0.14f, 0.14f, 0.14f);
+		//GL11.glRotatef(135f, 0f, 0f, 1f);
+		GuiDraw.drawTexturedModalRect(730, 300, 0, 0, 250, 250);//Output Arrow
 
 		GuiDraw.changeTexture(Reference.MOD_ID+":textures/gui/crucible_arrow_2.png");
-		GL11.glScalef(0.2f,0.2f,0.2f);
-		GuiDraw.drawTexturedModalRect(0, 30, 0, 0, 300, 300);//Item Input Arrow
-		GuiDraw.drawTexturedModalRect(0, 30, 0, 0, 300, 300);//Aspect Input Arrow
+		//GL11.glScalef(1f,1f,1f);
+		GuiDraw.drawTexturedModalRect(425, 550, 0, 0, 260, 260);//Aspect Input Arrow
+
+		GuiDraw.changeTexture(Reference.MOD_ID+":textures/gui/crucible_arrow_3.png");
+		GuiDraw.drawTexturedModalRect(425, 8, 0, 0, 260, 260);//Item Input Arrow
+		GL11.glDisable(GL11.GL_BLEND);
 	}
 
 	@Override
@@ -64,11 +69,73 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 		super.drawForeground(recipe);
 	}
 
+	private HashMap<String,int[]> getAspectCoords(AspectList aspects) {
+		int[] rows = {100,80,120};//Y values are as follows: 1 row, 2 rows - row # 1, 2 rows - row #2
+		int[] columns = {10,40,70};//X values are as follows: column #1, column #2, column #3
+		int[] coords = {0,0};
+		HashMap<String,int[]> map = new HashMap<String,int[]>();
+		int aspectNum = aspects.getAspects().length;
+		int i = 0;
+		for (Aspect aspect : aspects.getAspects()) {
+			if (aspectNum != 0) {
+				if (aspectNum > 0 && aspectNum < 4) {
+					coords[1] = rows[0];
+					if (aspectNum == 1) {
+						coords[0] = columns[1];
+					}
+					if (aspectNum == 2) {
+						if (i == 0) {
+							coords[0] = columns[0];
+						}else {
+							coords[0] = columns[2];
+						}
+					}
+				}else  {
+					if (i >= 0 && i < 4) {
+						coords[1] = rows[1];
+						if (aspectNum == 4 ||aspectNum == 5) {
+							if (i == 0) {
+								coords[0] = columns[0];
+							}else {
+								coords[0] = columns[2];
+							}
+						}else {
+							coords[0] = columns[i];
+						}
+					}else {
+						coords[1] = rows[2];
+						if (aspectNum == 4 ||aspectNum == 5) {
+							if (i == 0) {
+								coords[0] = columns[0];
+							}else {
+								coords[0] = columns[2];
+							}
+						}else {
+							coords[0] = columns[i];
+						}
+					}
+				}
+			}
+			map.put(aspect.getName(), coords);
+			i++;
+		}
+		return map;
+	}
+
 	@Override
 	public void drawExtras(int recipe) {
 		CachedCrucibleRecipe r = (CachedCrucibleRecipe) arecipes.get(recipe);
-		int coords[] = {0,0,0,0,260,260};
-		int textCoords[] = {0,0};
+		HashMap<String,int[]> map = getAspectCoords(r.aspects);
+		int coords[] = {0,0};
+		GL11.glScalef(.065f,.065f,.065f);
+		for (Aspect aspect : r.aspects.getAspects()) {
+			coords = map.get(aspect.getName());
+			Color color = new Color(aspect.getColor());
+			GL11.glColor4f(color.getRed()/255f, color.getGreen()/255f, color.getBlue()/255f, 1f);
+			GuiDraw.changeTexture(aspect.getImage());
+			GuiDraw.drawTexturedModalRect(coords[0], coords[1], 0, 0, 260, 260);
+		}
+		/*int textCoords[] = {0,0};
 		for (Aspect aspect : r.aspects.getAspects()) {
 			if (aspect.isPrimal()) {
 				if (aspect.getName().equalsIgnoreCase("Ignis")) {//Oh no, no switch statement! D:
@@ -92,35 +159,7 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 				}
 				GuiDraw.drawString(r.aspects.getAmount(aspect) + "", textCoords[0], textCoords[1], 0xFFFFFF, true);
 			}
-		}
-		GL11.glScalef(.065f,.065f,.065f);
-		for (Aspect aspect : r.aspects.getAspects()){
-			if (aspect.isPrimal()) {
-				if (aspect.getName().equalsIgnoreCase("Ignis")) {//Oh no, no switch statement! D:
-					coords[0] = 78;
-					coords[1] = 1281;
-				}else if (aspect.getName().equalsIgnoreCase("Aer")) {
-					coords[0] = 808;
-					coords[1] = 48;
-				}else if (aspect.getName().equalsIgnoreCase("Terra")) {
-					coords[0] = 78;
-					coords[1] = 387;
-				}else if (aspect.getName().equalsIgnoreCase("Aqua")) {
-					coords[0] = 808;
-					coords[1] = 1621;
-				}else if (aspect.getName().equalsIgnoreCase("Ordo")) {
-					coords[0] = 1540;
-					coords[1] = 1281;
-				}else if (aspect.getName().equalsIgnoreCase("Perditio")) {
-					coords[0] = 1540;
-					coords[1] = 387;
-				}
-				Color color = new Color(aspect.getColor());
-				GL11.glColor4f(color.getRed()/255f, color.getGreen()/255f, color.getBlue()/255f, 1f);
-				GuiDraw.changeTexture(aspect.getImage());
-				GuiDraw.drawTexturedModalRect(coords[0], coords[1], coords[2], coords[3], coords[4], coords[5]);
-			}
-		}
+		}*/
 	}
 
 	@Override
@@ -182,8 +221,8 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 	}
 
 	public class CachedCrucibleRecipe extends CachedRecipe{
-		private final int[] outCoords = {143,53};
-		private final int[] inCoords = {10,30};
+		private final int[] outCoords = {143,51};
+		private final int[] inCoords = {40,10};
 
 		private PositionedStack output;
 		private PositionedStack inputs;
@@ -191,7 +230,7 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 		public AspectList aspects;
 		public CrucibleRecipe recipe;
 
-		public CachedCrucibleRecipe(CrucibleRecipe recipe){//Wow that's a long class name!
+		public CachedCrucibleRecipe(CrucibleRecipe recipe){
 			this.aspects = recipe.aspects;
 			this.output = new PositionedStack(recipe.getRecipeOutput(), outCoords[0], outCoords[1]);
 			this.recipe = recipe;
