@@ -6,7 +6,9 @@ import codechicken.nei.recipe.TemplateRecipeHandler;
 import com.austinv11.thaumicnei.reference.Reference;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.opengl.GL11;
+import thaumcraft.api.ItemApi;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
@@ -21,7 +23,7 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 
 	@Override
 	public String getGuiTexture() {
-		return "thaumcraft:textures/misc/r_crucible.png";
+		return "thaumcraft:textures/blocks/crucible3.png";
 	}
 
 	@Override
@@ -36,10 +38,25 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 
 	@Override
 	public void drawBackground(int recipe) {
-		super.drawBackground(recipe);
+		GL11.glScalef(0.19f, 0.19f, 0.19f);
 		//GL11.glColor4f(1, 1, 1, 1);
-		//GuiDraw.changeTexture(getGuiTexture());
-		//GuiDraw.drawTexturedModalRect(0, 0, 11, 10, 0, 0);
+		GuiDraw.changeTexture(getGuiTexture());
+		GuiDraw.drawTexturedModalRect(290, 200, 11, 10, 235, 240);//Actual Crucible
+
+		GuiDraw.changeTexture("thaumcraft:textures/gui/gui_research.png");
+		GL11.glScalef(5.25f, 5.25f, 5.25f);
+		GuiDraw.drawTexturedModalRect(0, 0, 0, 230, 24, 24);//Input Slot
+		GuiDraw.drawTexturedModalRect(140, 48, 55, 230, 24, 24);//Output Slot
+
+		GuiDraw.changeTexture(Reference.MOD_ID+":textures/gui/crucible_arrow_1.png");
+		GL11.glScalef(0.11f, 0.11f, 0.11f);
+		GL11.glRotatef(135.55f, 0f, 0f, 1f);
+		GuiDraw.drawTexturedModalRect(-500, -996, 0, 0, 250, 250);//Output Arrow
+
+		GuiDraw.changeTexture(Reference.MOD_ID+":textures/gui/crucible_arrow_2.png");
+		GL11.glScalef(0.2f,0.2f,0.2f);
+		GuiDraw.drawTexturedModalRect(0, 30, 0, 0, 300, 300);//Item Input Arrow
+		GuiDraw.drawTexturedModalRect(0, 30, 0, 0, 300, 300);//Aspect Input Arrow
 	}
 
 	@Override
@@ -130,10 +147,19 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 			if (recipes.get(i) instanceof CrucibleRecipe) {
 				CrucibleRecipe recipe = (CrucibleRecipe) recipes.get(i);
 				if (ThaumcraftApiHelper.isResearchComplete(Reference.PLAYER_NAME, recipe.key)){
-					ItemStack item = (ItemStack) recipe.catalyst;
-					if (item.isItemEqual(ingredient)) {
-						if (checkDupe(recipe)) {
-							this.arecipes.add(new CachedCrucibleRecipe(recipe));
+					if (recipe.catalyst instanceof ItemStack) {
+						ItemStack item = (ItemStack) recipe.catalyst;
+						if (item.isItemEqual(ingredient)) {
+							if (checkDupe(recipe)) {
+								this.arecipes.add(new CachedCrucibleRecipe(recipe));
+							}
+						}
+					}else {
+						ArrayList<ItemStack> item = (ArrayList<ItemStack>) recipe.catalyst;
+						if (ThaumcraftApiHelper.itemMatches(ingredient,item.get(0) ,false)) {
+							if (checkDupe(recipe)) {
+								this.arecipes.add(new CachedCrucibleRecipe(recipe));
+							}
 						}
 					}
 				}
@@ -146,7 +172,9 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 			if (o instanceof CachedCrucibleRecipe){
 				CachedCrucibleRecipe r = (CachedCrucibleRecipe) o;
 				if (r.recipe.catalyst == recipe.catalyst){
-					return false;
+					if (r.recipe.getRecipeOutput().isItemEqual(recipe.getRecipeOutput())) {
+						return false;
+					}
 				}
 			}
 		}
@@ -154,8 +182,8 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 	}
 
 	public class CachedCrucibleRecipe extends CachedRecipe{
-		private final int[] outCoords = {139,54};
-		private final int[] inCoords = {29,53};
+		private final int[] outCoords = {143,53};
+		private final int[] inCoords = {10,30};
 
 		private PositionedStack output;
 		private PositionedStack inputs;

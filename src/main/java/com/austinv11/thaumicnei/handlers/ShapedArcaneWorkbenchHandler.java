@@ -7,6 +7,7 @@ import com.austinv11.thaumicnei.reference.Reference;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
+import thaumcraft.api.ItemApi;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
@@ -150,7 +151,9 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 			if (o instanceof CachedShapedArcaneWorkbenchRecipe){
 				CachedShapedArcaneWorkbenchRecipe r = (CachedShapedArcaneWorkbenchRecipe) o;
 				if (r.recipe.getInput() == recipe.getInput()){
-					return false;
+					if (r.recipe.getRecipeOutput().isItemEqual(recipe.getRecipeOutput())) {
+						return false;
+					}
 				}
 			}
 		}
@@ -159,7 +162,8 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 
 	public class CachedShapedArcaneWorkbenchRecipe extends CachedRecipe{
 		private final int[] outCoords = {139,54};
-		private final int[] inCoords = {29,53,77,70,77,99};//3 x coords, then 3 y coords
+		private final int[] inCoords = {29,53,77,75,81,103};//3 x coords, then 3 y coords
+		private final int[] wandCoords = {139, 34};
 
 		private PositionedStack output;
 		private List<PositionedStack> inputs = new ArrayList<PositionedStack>();
@@ -247,6 +251,12 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 		@Override
 		public List<PositionedStack> getIngredients() {
 			return this.inputs;
+		}
+
+		@Override
+		public PositionedStack getOtherStack() {
+			//return new PositionedStack(ItemApi.getItem("Thaumcraft:WandCasting", 0), wandCoords[0], wandCoords[1]);FIXME
+			return null;
 		}
 	}
 

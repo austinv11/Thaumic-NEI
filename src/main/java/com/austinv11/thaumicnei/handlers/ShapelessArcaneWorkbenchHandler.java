@@ -157,7 +157,9 @@ public class ShapelessArcaneWorkbenchHandler extends TemplateRecipeHandler {
 			if (o instanceof CachedShapelessArcaneWorkbenchRecipe){
 				CachedShapelessArcaneWorkbenchRecipe r = (CachedShapelessArcaneWorkbenchRecipe) o;
 				if (r.recipe.getInput() == recipe.getInput()){
-					return false;
+					if (r.recipe.getRecipeOutput().isItemEqual(recipe.getRecipeOutput())) {
+						return false;
+					}
 				}
 			}
 		}
@@ -166,7 +168,8 @@ public class ShapelessArcaneWorkbenchHandler extends TemplateRecipeHandler {
 
 	public class CachedShapelessArcaneWorkbenchRecipe extends CachedRecipe{
 		private final int[] outCoords = {139,54};
-		private final int[] inCoords = {29,53,77,70,77,99};//3 x coords, then 3 y coords
+		private final int[] inCoords = {29,53,77,75,81,103};//3 x coords, then 3 y coords
+		private final int[] wandCoords = {139, 34};
 
 		private PositionedStack output;
 		private List<PositionedStack> inputs = new ArrayList<PositionedStack>();
@@ -258,6 +261,11 @@ public class ShapelessArcaneWorkbenchHandler extends TemplateRecipeHandler {
 			for (PositionedStack i : this.inputs) {
 				i.generatePermutations();
 			}
+		}
+		@Override
+		public PositionedStack getOtherStack() {
+			//return new PositionedStack(ItemApi.getItem("Thaumcraft:WandCasting", 0), wandCoords[0], wandCoords[1]);FIXME
+			return null;
 		}
 	}
 
