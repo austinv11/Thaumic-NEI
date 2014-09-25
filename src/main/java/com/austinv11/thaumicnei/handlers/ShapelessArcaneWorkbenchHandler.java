@@ -4,20 +4,22 @@ import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import com.austinv11.thaumicnei.reference.Reference;
+import com.austinv11.thaumicnei.utils.Logger;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.opengl.GL11;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
-import thaumcraft.api.crafting.ShapedArcaneRecipe;
+import thaumcraft.api.crafting.ShapelessArcaneRecipe;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
+public class ShapelessArcaneWorkbenchHandler extends TemplateRecipeHandler {
 
 	@Override
 	public String getGuiTexture() {
@@ -26,7 +28,7 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 
 	@Override
 	public String getRecipeName() {
-		return StatCollector.translateToLocal(Reference.MOD_ID+":gui.nei.arcaneWorkbench.shaped");
+		return StatCollector.translateToLocal(Reference.MOD_ID+":gui.nei.arcaneWorkbench.shapeless");
 	}
 
 	@Override
@@ -49,7 +51,7 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 
 	@Override
 	public void drawExtras(int recipe) {
-		CachedShapedArcaneWorkbenchRecipe r = (CachedShapedArcaneWorkbenchRecipe) arecipes.get(recipe);
+		CachedShapelessArcaneWorkbenchRecipe r = (CachedShapelessArcaneWorkbenchRecipe) arecipes.get(recipe);
 		for (Aspect aspect : r.aspects.getAspects()){
 			if (aspect.isPrimal()) {
 				int coords[] = {0,0,0,0,260,260};
@@ -99,12 +101,14 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 	public void loadCraftingRecipes(ItemStack result) {
 		List recipes = ThaumcraftApi.getCraftingRecipes();
 		for (int i = 0; i < recipes.size(); i++){//Sorry, no enhanced for loop here :P
-			if (recipes.get(i) instanceof ShapedArcaneRecipe) {
-				ShapedArcaneRecipe recipe = (ShapedArcaneRecipe) recipes.get(i);
+			if (recipes.get(i) instanceof ShapelessArcaneRecipe) {
+				ShapelessArcaneRecipe recipe = (ShapelessArcaneRecipe) recipes.get(i);
 				if (ThaumcraftApiHelper.isResearchComplete(Reference.PLAYER_NAME, recipe.getResearch())){
 					if (recipe.getRecipeOutput().isItemEqual(result)) {
 						if (checkDupe(recipe)) {
-							this.arecipes.add(new CachedShapedArcaneWorkbenchRecipe(recipe));
+							CachedShapelessArcaneWorkbenchRecipe r = new CachedShapelessArcaneWorkbenchRecipe(recipe);
+							r.prepVisuals();
+							this.arecipes.add(r);
 						}
 					}
 				}
@@ -116,15 +120,18 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 	public void loadUsageRecipes(ItemStack ingredient) {
 		List recipes = ThaumcraftApi.getCraftingRecipes();
 		for (int i = 0; i < recipes.size(); i++) {//Sorry, no enhanced for loop here again :P
-			if (recipes.get(i) instanceof ShapedArcaneRecipe) {
-				ShapedArcaneRecipe recipe = (ShapedArcaneRecipe) recipes.get(i);
+			if (recipes.get(i) instanceof ShapelessArcaneRecipe) {
+				ShapelessArcaneRecipe recipe = (ShapelessArcaneRecipe) recipes.get(i);
 				if (ThaumcraftApiHelper.isResearchComplete(Reference.PLAYER_NAME, recipe.getResearch())){
 					for (Object o : recipe.getInput()) {
 						if (o instanceof ItemStack) {
 							ItemStack item = (ItemStack) o;
 							if (item.isItemEqual(ingredient)) {
 								if (checkDupe(recipe)) {
-									this.arecipes.add(new CachedShapedArcaneWorkbenchRecipe(recipe));
+									CachedShapelessArcaneWorkbenchRecipe r = new CachedShapelessArcaneWorkbenchRecipe(recipe);
+									r.prepVisuals();
+									r.setIngredientPermutation(r.inputs,ingredient);
+									this.arecipes.add(r);
 								}
 							}
 						}
@@ -134,10 +141,10 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 		}
 	}
 
-	private boolean checkDupe(ShapedArcaneRecipe recipe) {
+	private boolean checkDupe(ShapelessArcaneRecipe recipe) {
 		for (Object o : this.arecipes.toArray()){
-			if (o instanceof CachedShapedArcaneWorkbenchRecipe){
-				CachedShapedArcaneWorkbenchRecipe r = (CachedShapedArcaneWorkbenchRecipe) o;
+			if (o instanceof CachedShapelessArcaneWorkbenchRecipe){
+				CachedShapelessArcaneWorkbenchRecipe r = (CachedShapelessArcaneWorkbenchRecipe) o;
 				if (r.recipe.getInput() == recipe.getInput()){
 					return false;
 				}
@@ -146,7 +153,7 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 		return true;
 	}
 
-	public class CachedShapedArcaneWorkbenchRecipe extends CachedRecipe{
+	public class CachedShapelessArcaneWorkbenchRecipe extends CachedRecipe{
 		private final int[] outCoords = {139,54};
 		private final int[] inCoords = {29,53,77,70,77,99};//3 x coords, then 3 y coords
 
@@ -155,75 +162,73 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 		//private PositionedStack extra = new PositionedStack()TODO add wand extras
 
 		public AspectList aspects;
-		public ShapedArcaneRecipe recipe;
+		public ShapelessArcaneRecipe recipe;
 
-		public CachedShapedArcaneWorkbenchRecipe(ShapedArcaneRecipe recipe){//Wow that's a long class name!
+		public CachedShapelessArcaneWorkbenchRecipe(ShapelessArcaneRecipe recipe){//Wow that's a long class name!
 			this.aspects = recipe.getAspects();
 			this.output = new PositionedStack(recipe.getRecipeOutput(), outCoords[0], outCoords[1]);
 			this.recipe = recipe;
-			Object[] input = recipe.getInput();
+			ArrayList<Object> input = recipe.getInput();
 			int i = 0;
 			for (Object inputItem : input){
 				//if (inputItem != null){
-					//if (inputItem instanceof ItemStack) {
 				switch (i) {
 					case 0:
 						if (inputItem != null) {
 
-								this.inputs.add(new PositionedStack(inputItem, inCoords[0], inCoords[0]));
+							this.inputs.add(new PositionedStack(inputItem, inCoords[0], inCoords[0]));
 						}
 						break;
 					case 1:
-						if (inputItem != null){
-								this.inputs.add(new PositionedStack(inputItem, inCoords[1], inCoords[0]));
+						if (inputItem != null) {
+							this.inputs.add(new PositionedStack(inputItem, inCoords[1], inCoords[0]));
 						}
 						break;
 					case 2:
-						if (inputItem != null){
-								this.inputs.add(new PositionedStack(inputItem, inCoords[2], inCoords[0]));
+						if (inputItem != null) {
+							this.inputs.add(new PositionedStack(inputItem, inCoords[2], inCoords[0]));
 
 						}
 						break;
 					case 3:
-						if (inputItem != null){
-								this.inputs.add(new PositionedStack(inputItem, inCoords[0], inCoords[1]));
+						if (inputItem != null) {
+							this.inputs.add(new PositionedStack(inputItem, inCoords[0], inCoords[1]));
 
 						}
 						break;
 					case 4:
-						if (inputItem != null){
-								this.inputs.add(new PositionedStack(inputItem, inCoords[1], inCoords[1]));
+						if (inputItem != null) {
+							this.inputs.add(new PositionedStack(inputItem, inCoords[1], inCoords[1]));
 
 						}
 						break;
 					case 5:
-						if (inputItem != null){
-								this.inputs.add(new PositionedStack(inputItem, inCoords[2], inCoords[1]));
+						if (inputItem != null) {
+							this.inputs.add(new PositionedStack(inputItem, inCoords[2], inCoords[1]));
 
 						}
 						break;
 					case 6:
-						if (inputItem != null){
-								this.inputs.add(new PositionedStack(inputItem, inCoords[0], inCoords[2]));
+						if (inputItem != null) {
+							this.inputs.add(new PositionedStack(inputItem, inCoords[0], inCoords[2]));
 
 						}
 						break;
 					case 7:
-						if (inputItem != null){
-								this.inputs.add(new PositionedStack(inputItem, inCoords[1], inCoords[2]));
+						if (inputItem != null) {
+							this.inputs.add(new PositionedStack(inputItem, inCoords[1], inCoords[2]));
 
 						}
 						break;
 					case 8:
-						if (inputItem != null){
+						if (inputItem != null) {
 
-								this.inputs.add(new PositionedStack(inputItem, inCoords[2], inCoords[2]));
+							this.inputs.add(new PositionedStack(inputItem, inCoords[2], inCoords[2]));
 
 						}
 						break;
-				}
-				//	}
-					i++;
+					}
+				i++;
 				//}
 			}
 		}
@@ -235,7 +240,13 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 
 		@Override
 		public List<PositionedStack> getIngredients() {
-			return this.inputs;
+			return getCycledIngredients(cycleticks / 20, this.inputs);
+		}
+
+		public void prepVisuals() {
+			for (PositionedStack i : this.inputs) {
+				i.generatePermutations();
+			}
 		}
 	}
 
