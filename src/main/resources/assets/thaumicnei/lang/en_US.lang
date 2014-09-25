@@ -1,6 +1,8 @@
 
 thaumicnei:gui.nei.arcaneWorkbench.shaped=Shaped Arcane Recipes
 thaumicnei:gui.nei.arcaneWorkbench.shapeless=Shapeless Arcane Recipes
+thaumicnei:gui.nei.infusion=Infusion Recipes
+thaumicnei:gui.nei.crucible=Crucible Recipes
 
 thaumicnei:filter.aspect.0=aspect
 thaumicnei:filter.aspect.1=aspects
