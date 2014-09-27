@@ -239,7 +239,7 @@ public class InfusionHandler extends TemplateRecipeHandler {
 			this.aspects = recipe.getAspects();
 			this.output = new PositionedStack(recipe.getRecipeOutput(), outCoords[0], outCoords[1]);
 			this.recipe = recipe;
-			this.inputs = new PositionedStack(recipe.catalyst, inCoords[0], inCoords[1]);
+			//this.inputs = new PositionedStack(recipe.catalyst, inCoords[0], inCoords[1]);
 
 		}
 

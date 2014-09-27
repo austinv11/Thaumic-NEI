@@ -1,13 +1,5 @@
 buildscript {
     repositories {
-        maven { // The repo from which to get waila
-            name "Mobius Repo"
-            url "http://mobiusstrip.eu/maven"
-        }
-        maven { // the repo from which to get NEI and stuff
-            name 'CB Repo'
-            url "http://chickenbones.net/maven/"
-        }
         mavenCentral()
         maven {
             name = "forge"
@@ -22,6 +14,12 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
     }
 }
+repositories{
+    maven {
+        name = "chickenbones"
+        url = "http://chickenbones.net/maven"
+    }
+}
 
 apply plugin: 'forge'
 
@@ -32,6 +30,7 @@ archivesBaseName = "ThaumicNEI"
 minecraft {
     version = "1.7.10-10.13.0.1199"
     runDir = "eclipse/assets"
+    replace("@VERSION@",project.version)
 }
 
 dependencies {
@@ -47,7 +46,9 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-    compile "mcp.mobius.waila:Waila:1.5.4a_1.7.10"
+    compile "codechicken:NotEnoughItems:1.7.10-1.0.2.15:dev"
+    compile "codechicken:CodeChickenLib:1.7.10-1.1.1.93:dev"
+    compile "codechicken:CodeChickenCore:1.7.10-1.0.2.9:dev"
 }
 
 processResources
