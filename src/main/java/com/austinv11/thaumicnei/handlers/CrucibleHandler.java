@@ -3,6 +3,7 @@ package com.austinv11.thaumicnei.handlers;
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
+import com.austinv11.thaumicnei.reference.Config;
 import com.austinv11.thaumicnei.reference.Reference;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
@@ -70,8 +71,8 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 	}
 
 	private HashMap<String,int[]> getAspectCoords(AspectList aspects) {
-		int[] rows = {100,80,120};//Y values are as follows: 1 row, 2 rows - row # 1, 2 rows - row #2
-		int[] columns = {10,40,70};//X values are as follows: column #1, column #2, column #3
+		int[] rows = {300,220,480};//Y values are as follows: 1 row, 2 rows - row # 1, 2 rows - row #2
+		int[] columns = {10,50,90};//X values are as follows: column #1, column #2, column #3
 		int[] coords = {0,0};
 		HashMap<String,int[]> map = new HashMap<String,int[]>();
 		int aspectNum = aspects.getAspects().length;
@@ -82,15 +83,16 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 					coords[1] = rows[0];
 					if (aspectNum == 1) {
 						coords[0] = columns[1];
-					}
-					if (aspectNum == 2) {
+					}else if (aspectNum == 2) {
 						if (i == 0) {
 							coords[0] = columns[0];
 						}else {
 							coords[0] = columns[2];
 						}
+					}else if (aspectNum == 3) {
+						coords[0] = columns[i];
 					}
-				}else  {
+				}else {
 					if (i >= 0 && i < 4) {
 						coords[1] = rows[1];
 						if (aspectNum == 4 ||aspectNum == 5) {
@@ -168,7 +170,7 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 		for (int i = 0; i < recipes.size(); i++){//Sorry, no enhanced for loop here :P
 			if (recipes.get(i) instanceof CrucibleRecipe) {
 				CrucibleRecipe recipe = (CrucibleRecipe) recipes.get(i);
-				if (ThaumcraftApiHelper.isResearchComplete(Reference.PLAYER_NAME, recipe.key)){
+				if (ThaumcraftApiHelper.isResearchComplete(Reference.PLAYER_NAME, recipe.key) || Config.cheatMode){
 					if (recipe.getRecipeOutput().isItemEqual(result)) {
 						if (checkDupe(recipe)) {
 							this.arecipes.add(new CachedCrucibleRecipe(recipe));
@@ -185,7 +187,7 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 		for (int i = 0; i < recipes.size(); i++) {//Sorry, no enhanced for loop here again :P
 			if (recipes.get(i) instanceof CrucibleRecipe) {
 				CrucibleRecipe recipe = (CrucibleRecipe) recipes.get(i);
-				if (ThaumcraftApiHelper.isResearchComplete(Reference.PLAYER_NAME, recipe.key)){
+				if (ThaumcraftApiHelper.isResearchComplete(Reference.PLAYER_NAME, recipe.key) || Config.cheatMode){
 					if (recipe.catalyst instanceof ItemStack) {
 						ItemStack item = (ItemStack) recipe.catalyst;
 						if (item.isItemEqual(ingredient)) {

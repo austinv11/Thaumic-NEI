@@ -3,6 +3,7 @@ package com.austinv11.thaumicnei.handlers;
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
+import com.austinv11.thaumicnei.reference.Config;
 import com.austinv11.thaumicnei.reference.Reference;
 import com.austinv11.thaumicnei.utils.Logger;
 import net.minecraft.item.ItemStack;
@@ -114,7 +115,7 @@ public class ShapelessArcaneWorkbenchHandler extends TemplateRecipeHandler {
 		for (int i = 0; i < recipes.size(); i++){//Sorry, no enhanced for loop here :P
 			if (recipes.get(i) instanceof ShapelessArcaneRecipe) {
 				ShapelessArcaneRecipe recipe = (ShapelessArcaneRecipe) recipes.get(i);
-				if (ThaumcraftApiHelper.isResearchComplete(Reference.PLAYER_NAME, recipe.getResearch())){
+				if (ThaumcraftApiHelper.isResearchComplete(Reference.PLAYER_NAME, recipe.getResearch()) || Config.cheatMode){
 					if (recipe.getRecipeOutput().isItemEqual(result)) {
 						if (checkDupe(recipe)) {
 							CachedShapelessArcaneWorkbenchRecipe r = new CachedShapelessArcaneWorkbenchRecipe(recipe);
@@ -133,7 +134,7 @@ public class ShapelessArcaneWorkbenchHandler extends TemplateRecipeHandler {
 		for (int i = 0; i < recipes.size(); i++) {//Sorry, no enhanced for loop here again :P
 			if (recipes.get(i) instanceof ShapelessArcaneRecipe) {
 				ShapelessArcaneRecipe recipe = (ShapelessArcaneRecipe) recipes.get(i);
-				if (ThaumcraftApiHelper.isResearchComplete(Reference.PLAYER_NAME, recipe.getResearch())){
+				if (ThaumcraftApiHelper.isResearchComplete(Reference.PLAYER_NAME, recipe.getResearch()) || Config.cheatMode){
 					for (Object o : recipe.getInput()) {
 						if (o instanceof ItemStack) {
 							ItemStack item = (ItemStack) o;
