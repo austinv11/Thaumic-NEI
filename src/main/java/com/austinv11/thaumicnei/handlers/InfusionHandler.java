@@ -14,14 +14,14 @@ import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
-import thaumcraft.api.crafting.CrucibleRecipe;
+import thaumcraft.api.crafting.InfusionRecipe;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class CrucibleHandler extends TemplateRecipeHandler {
+public class InfusionHandler extends TemplateRecipeHandler {
 
 	@Override
 	public String getGuiTexture() {
@@ -30,7 +30,7 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 
 	@Override
 	public String getRecipeName() {
-		return StatCollector.translateToLocal(Reference.MOD_ID+":gui.nei.crucible");
+		return StatCollector.translateToLocal(Reference.MOD_ID+":gui.nei.infusion");
 	}
 
 	@Override
@@ -126,7 +126,7 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 
 	@Override
 	public void drawExtras(int recipe) {
-		CachedCrucibleRecipe r = (CachedCrucibleRecipe) arecipes.get(recipe);
+		CachedInfusionRecipe r = (CachedInfusionRecipe) arecipes.get(recipe);
 		HashMap<String,int[]> map = getAspectCoords(r.aspects);
 		int coords[] = {0,0};
 		GL11.glScalef(.065f,.065f,.065f);
@@ -168,12 +168,22 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 	public void loadCraftingRecipes(ItemStack result) {
 		List recipes = ThaumcraftApi.getCraftingRecipes();
 		for (int i = 0; i < recipes.size(); i++){//Sorry, no enhanced for loop here :P
-			if (recipes.get(i) instanceof CrucibleRecipe) {
-				CrucibleRecipe recipe = (CrucibleRecipe) recipes.get(i);
-				if (ThaumcraftApiHelper.isResearchComplete(Reference.PLAYER_NAME, recipe.key) || Config.cheatMode){
-					if (recipe.getRecipeOutput().isItemEqual(result)) {
-						if (checkDupe(recipe)) {
-							this.arecipes.add(new CachedCrucibleRecipe(recipe));
+			if (recipes.get(i) instanceof InfusionRecipe) {
+				InfusionRecipe recipe = (InfusionRecipe) recipes.get(i);
+				if (ThaumcraftApiHelper.isResearchComplete(Reference.PLAYER_NAME, recipe.getResearch()) || Config.cheatMode){
+					if (recipe.getRecipeOutput() instanceof ItemStack) {
+						ItemStack item = (ItemStack) recipe.getRecipeOutput();
+						if (item.isItemEqual(result)) {
+							if (checkDupe(recipe)) {
+								this.arecipes.add(new CachedInfusionRecipe(recipe));
+							}
+						}
+					}else {
+						ArrayList<ItemStack> item = (ArrayList<ItemStack>) recipe.getRecipeOutput();
+						if (item.contains(result)) {
+							if (checkDupe(recipe)) {
+								this.arecipes.add(new CachedInfusionRecipe(recipe));
+							}
 						}
 					}
 				}
@@ -185,21 +195,14 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 	public void loadUsageRecipes(ItemStack ingredient) {
 		List recipes = ThaumcraftApi.getCraftingRecipes();
 		for (int i = 0; i < recipes.size(); i++) {//Sorry, no enhanced for loop here again :P
-			if (recipes.get(i) instanceof CrucibleRecipe) {
-				CrucibleRecipe recipe = (CrucibleRecipe) recipes.get(i);
-				if (ThaumcraftApiHelper.isResearchComplete(Reference.PLAYER_NAME, recipe.key) || Config.cheatMode){
-					if (recipe.catalyst instanceof ItemStack) {
-						ItemStack item = (ItemStack) recipe.catalyst;
+			if (recipes.get(i) instanceof InfusionRecipe) {
+				InfusionRecipe recipe = (InfusionRecipe) recipes.get(i);
+				if (ThaumcraftApiHelper.isResearchComplete(Reference.PLAYER_NAME, recipe.getResearch()) || Config.cheatMode){
+					for (ItemStack item : recipe.getComponents()) {
 						if (item.isItemEqual(ingredient)) {
 							if (checkDupe(recipe)) {
-								this.arecipes.add(new CachedCrucibleRecipe(recipe));
-							}
-						}
-					}else {
-						ArrayList<ItemStack> item = (ArrayList<ItemStack>) recipe.catalyst;
-						if (item.contains(ingredient)) {
-							if (checkDupe(recipe)) {
-								this.arecipes.add(new CachedCrucibleRecipe(recipe));
+								this.arecipes.add(new CachedInfusionRecipe(recipe));
+								break;
 							}
 						}
 					}
@@ -208,12 +211,12 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 		}
 	}
 
-	private boolean checkDupe(CrucibleRecipe recipe) {
+	private boolean checkDupe(InfusionRecipe recipe) {
 		for (Object o : this.arecipes.toArray()){
-			if (o instanceof CachedCrucibleRecipe){
-				CachedCrucibleRecipe r = (CachedCrucibleRecipe) o;
-				if (r.recipe.catalyst == recipe.catalyst){
-					if (r.recipe.getRecipeOutput().isItemEqual(recipe.getRecipeOutput())) {
+			if (o instanceof CachedInfusionRecipe){
+				CachedInfusionRecipe r = (CachedInfusionRecipe) o;
+				if (r.recipe.getComponents() == recipe.getComponents()){
+					if (r.recipe.getRecipeOutput().equals(recipe.getRecipeOutput())) {
 						return false;
 					}
 				}
@@ -222,7 +225,7 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 		return true;
 	}
 
-	public class CachedCrucibleRecipe extends CachedRecipe{
+	public class CachedInfusionRecipe extends CachedRecipe{//TODO
 		private final int[] outCoords = {143,51};
 		private final int[] inCoords = {40,10};
 
@@ -230,10 +233,10 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 		private PositionedStack inputs;
 
 		public AspectList aspects;
-		public CrucibleRecipe recipe;
+		public InfusionRecipe recipe;
 
-		public CachedCrucibleRecipe(CrucibleRecipe recipe){
-			this.aspects = recipe.aspects;
+		public CachedInfusionRecipe(InfusionRecipe recipe){
+			this.aspects = recipe.getAspects();
 			this.output = new PositionedStack(recipe.getRecipeOutput(), outCoords[0], outCoords[1]);
 			this.recipe = recipe;
 			this.inputs = new PositionedStack(recipe.catalyst, inCoords[0], inCoords[1]);
@@ -253,6 +256,6 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 
 	@Override
 	public String getOverlayIdentifier(){
-		return "crucible";
+		return "infusion ";
 	}
 }

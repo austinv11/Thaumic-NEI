@@ -4,6 +4,7 @@ import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 import com.austinv11.thaumicnei.filters.AspectFilter;
 import com.austinv11.thaumicnei.handlers.CrucibleHandler;
+import com.austinv11.thaumicnei.handlers.InfusionHandler;
 import com.austinv11.thaumicnei.handlers.ShapedArcaneWorkbenchHandler;
 import com.austinv11.thaumicnei.handlers.ShapelessArcaneWorkbenchHandler;
 import com.austinv11.thaumicnei.overlay.ArcaneWorkbenchHelper;
@@ -30,6 +31,9 @@ public class NEIThaumicConfig implements IConfigureNEI {
 
 		API.registerRecipeHandler(new CrucibleHandler());
 		API.registerUsageHandler(new CrucibleHandler());
+
+		API.registerRecipeHandler(new InfusionHandler());
+		API.registerUsageHandler(new InfusionHandler());
 
 		//OverlayHandler overlayHandler = new OverlayHandler(14, 4, ArcaneWorkbenchHelper.slotCraftMatrix);FIXME
 		//API.registerGuiOverlayHandler(ArcaneWorkbenchHelper.guiArcaneTable, overlayHandler, "crafting");FIXME
