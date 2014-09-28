@@ -20,7 +20,7 @@ public class NEIThaumicConfig implements IConfigureNEI {
 		if (Config.cheatMode) {
 			API.addSearchProvider(new AspectFilter());
 		}
-		if (!Config.showThaumcraftItems){
+		if (!Config.hideNonResearched){
 			//API.addSearchProvider(new ThaumItemFilter());TODO
 		}
 		API.registerRecipeHandler(new ShapedArcaneWorkbenchHandler());
