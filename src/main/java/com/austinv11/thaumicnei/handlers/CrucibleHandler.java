@@ -118,7 +118,7 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 					}
 				}
 			}
-			map.put(aspect.getName(), coords);
+			map.put(aspect.getName(), coords.clone());
 			i++;
 		}
 		return map;

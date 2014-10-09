@@ -32,8 +32,8 @@ public class NEIThaumicConfig implements IConfigureNEI {
 		API.registerRecipeHandler(new CrucibleHandler());
 		API.registerUsageHandler(new CrucibleHandler());
 
-		API.registerRecipeHandler(new InfusionHandler());
-		API.registerUsageHandler(new InfusionHandler());
+		//API.registerRecipeHandler(new InfusionHandler());FIXME
+		//API.registerUsageHandler(new InfusionHandler());
 
 		//OverlayHandler overlayHandler = new OverlayHandler(14, 4, ArcaneWorkbenchHelper.slotCraftMatrix);FIXME
 		//API.registerGuiOverlayHandler(ArcaneWorkbenchHelper.guiArcaneTable, overlayHandler, "crafting");FIXME
