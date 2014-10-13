@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
+import thaumcraft.api.research.ScanResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public class AspectFilter implements SearchField.ISearchProvider {
 		String pattern;
 		int aspectSearch = 0;
 
-		public Filter(String searchText) {
+		public Filter(String searchText) {//TODO: utilize the ScanManager class in TC to filter based on what the player has scanned
 			//Logger.info("Searching! :D");
 			if (searchText.startsWith("@"+StatCollector.translateToLocal(Reference.MOD_ID+":filter.aspect.0")+":") && searchText.length() > 8) {
 				pattern = searchText.substring(8);
