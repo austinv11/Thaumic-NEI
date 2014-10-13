@@ -5,6 +5,7 @@ import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import com.austinv11.thaumicnei.reference.Config;
 import com.austinv11.thaumicnei.reference.Reference;
+import com.austinv11.thaumicnei.utils.Logger;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
@@ -184,20 +185,20 @@ public class InfusionHandler extends TemplateRecipeHandler {
 			if (recipes.get(i) instanceof InfusionRecipe) {
 				InfusionRecipe recipe = (InfusionRecipe) recipes.get(i);
 				if (ThaumcraftApiHelper.isResearchComplete(Reference.PLAYER_NAME, recipe.getResearch()) || Config.cheatMode){
-					if (recipe.getRecipeOutput() instanceof ItemStack) {
-						ItemStack item = (ItemStack) recipe.getRecipeOutput();
+					ItemStack output = (ItemStack) recipe.getRecipeOutput();
+					if (output instanceof ItemStack) {
+						ItemStack item = (ItemStack) output;
 						if (item.isItemEqual(result)) {
 							if (checkDupe(recipe)) {
 								this.arecipes.add(new CachedInfusionRecipe(recipe));
 							}
 						}
 					}else {
-						ArrayList<ItemStack> item = (ArrayList<ItemStack>) recipe.getRecipeOutput();
-						if (item.contains(result)) {
-							if (checkDupe(recipe)) {
-								this.arecipes.add(new CachedInfusionRecipe(recipe));
-							}
-						}
+						//if (output[0].equals(result.getUnlocalizedName())) {
+						//	if (checkDupe(recipe)) {
+						//		this.arecipes.add(new CachedInfusionRecipe(recipe));
+						//	}
+						//}
 					}
 				}
 			}
