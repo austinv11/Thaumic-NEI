@@ -7,9 +7,7 @@ import com.austinv11.thaumicnei.reference.Config;
 import com.austinv11.thaumicnei.reference.Reference;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.opengl.GL11;
-import thaumcraft.api.ItemApi;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.ThaumcraftApiHelper;
 import thaumcraft.api.aspects.Aspect;
@@ -18,6 +16,7 @@ import thaumcraft.api.crafting.InfusionRecipe;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -71,8 +70,8 @@ public class InfusionHandler extends TemplateRecipeHandler {
 	}
 
 	private HashMap<String,int[]> getAspectCoords(AspectList aspects) {
-		int[] rows = {300,220,480};//Y values are as follows: 1 row, 2 rows - row # 1, 2 rows - row #2
-		int[] columns = {10,50,90};//X values are as follows: column #1, column #2, column #3
+		int[] rows = {1325,1205,1535};//Y values are as follows: 1 row, 2 rows - row # 1, 2 rows - row #2
+		int[] columns = {30,330,630};//X values are as follows: column #1, column #2, column #3
 		int[] coords = {0,0};
 		HashMap<String,int[]> map = new HashMap<String,int[]>();
 		int aspectNum = aspects.getAspects().length;
@@ -93,7 +92,7 @@ public class InfusionHandler extends TemplateRecipeHandler {
 						coords[0] = columns[i];
 					}
 				}else {
-					if (i >= 0 && i < 4) {
+					if (i >= 0 && i < 2) {
 						coords[1] = rows[1];
 						if (aspectNum == 4 ||aspectNum == 5) {
 							if (i == 0) {
@@ -106,8 +105,8 @@ public class InfusionHandler extends TemplateRecipeHandler {
 						}
 					}else {
 						coords[1] = rows[2];
-						if (aspectNum == 4 ||aspectNum == 5) {
-							if (i == 0) {
+						if (aspectNum == 4) {
+							if (i == 2) {
 								coords[0] = columns[0];
 							}else {
 								coords[0] = columns[2];
@@ -118,17 +117,51 @@ public class InfusionHandler extends TemplateRecipeHandler {
 					}
 				}
 			}
-			map.put(aspect.getName(), coords);
+			map.put(aspect.getName(), coords.clone());
 			i++;
 		}
 		return map;
+	}
+
+	private HashMap<String,int[]> getTextCoords(HashMap<String,int[]> map, AspectList aspects) {
+		HashMap<String,int[]> rMap = new HashMap<String,int[]>();
+		int[] coords2 = {0,0};
+		for (Aspect aspect : aspects.getAspects()) {
+			int[] coords = map.get(aspect.getName());
+			switch (coords[0]){//TODO update coords
+				case 30:
+					coords2[0] = 11;
+					break;
+				case 330:
+					coords2[0] = 31;
+					break;
+				case 630:
+					coords2[0] = 51;
+					break;
+			}
+			switch (coords[1]){//TODO update coords
+				case 1325:
+					coords2[1] = 102;
+					break;
+				case 1205:
+					coords2[1] = 90;
+					break;
+				case 1535:
+					coords2[1] = 114;
+					break;
+			}
+			rMap.put(aspect.getName(),coords2.clone());
+		}
+		return rMap;
 	}
 
 	@Override
 	public void drawExtras(int recipe) {
 		CachedInfusionRecipe r = (CachedInfusionRecipe) arecipes.get(recipe);
 		HashMap<String,int[]> map = getAspectCoords(r.aspects);
+		HashMap<String,int[]> textMap = getTextCoords(map,r.aspects);
 		int coords[] = {0,0};
+		int coords2[] = {0,0};
 		GL11.glScalef(.065f,.065f,.065f);
 		for (Aspect aspect : r.aspects.getAspects()) {
 			coords = map.get(aspect.getName());
@@ -137,31 +170,11 @@ public class InfusionHandler extends TemplateRecipeHandler {
 			GuiDraw.changeTexture(aspect.getImage());
 			GuiDraw.drawTexturedModalRect(coords[0], coords[1], 0, 0, 260, 260);
 		}
-		/*int textCoords[] = {0,0};
-		for (Aspect aspect : r.aspects.getAspects()) {
-			if (aspect.isPrimal()) {
-				if (aspect.getName().equalsIgnoreCase("Ignis")) {//Oh no, no switch statement! D:
-					textCoords[0] = 8;
-					textCoords[1] = 101;
-				} else if (aspect.getName().equalsIgnoreCase("Aer")) {
-					textCoords[0] = 68;
-					textCoords[1] = 17;
-				} else if (aspect.getName().equalsIgnoreCase("Terra")) {
-					textCoords[0] = 8;
-					textCoords[1] = 43;
-				} else if (aspect.getName().equalsIgnoreCase("Aqua")) {
-					textCoords[0] = 68;
-					textCoords[1] = 98;
-				} else if (aspect.getName().equalsIgnoreCase("Ordo")) {
-					textCoords[0] = 104;
-					textCoords[1] = 101;
-				} else if (aspect.getName().equalsIgnoreCase("Perditio")) {
-					textCoords[0] = 104;
-					textCoords[1] = 43;
-				}
-				GuiDraw.drawString(r.aspects.getAmount(aspect) + "", textCoords[0], textCoords[1], 0xFFFFFF, true);
-			}
-		}*/
+		GL11.glScalef(15.625f,15.625f,15.625f);
+		for (Aspect aspect : r.aspects.getAspects()){
+			coords2 = textMap.get(aspect.getName());
+			GuiDraw.drawString(r.aspects.getAmount(aspect)+"",coords2[0],coords2[1],0xFFFFFF, true);
+		}
 	}
 
 	@Override
@@ -198,12 +211,10 @@ public class InfusionHandler extends TemplateRecipeHandler {
 			if (recipes.get(i) instanceof InfusionRecipe) {
 				InfusionRecipe recipe = (InfusionRecipe) recipes.get(i);
 				if (ThaumcraftApiHelper.isResearchComplete(Reference.PLAYER_NAME, recipe.getResearch()) || Config.cheatMode){
-					for (ItemStack item : recipe.getComponents()) {
-						if (item.isItemEqual(ingredient)) {
-							if (checkDupe(recipe)) {
-								this.arecipes.add(new CachedInfusionRecipe(recipe));
-								break;
-							}
+					ArrayList<ItemStack> components = new ArrayList<ItemStack>(Arrays.asList(recipe.getComponents()));
+					if (recipe.getRecipeInput().isItemEqual(ingredient) || components.contains(ingredient)) {
+						if (checkDupe(recipe)) {
+							this.arecipes.add(new CachedInfusionRecipe(recipe));
 						}
 					}
 				}
@@ -215,7 +226,7 @@ public class InfusionHandler extends TemplateRecipeHandler {
 		for (Object o : this.arecipes.toArray()){
 			if (o instanceof CachedInfusionRecipe){
 				CachedInfusionRecipe r = (CachedInfusionRecipe) o;
-				if (r.recipe.getComponents() == recipe.getComponents()){
+				if (r.recipe.getRecipeInput() == recipe.getRecipeInput()){
 					if (r.recipe.getRecipeOutput().equals(recipe.getRecipeOutput())) {
 						return false;
 					}
@@ -225,12 +236,12 @@ public class InfusionHandler extends TemplateRecipeHandler {
 		return true;
 	}
 
-	public class CachedInfusionRecipe extends CachedRecipe{//TODO
+	public class CachedInfusionRecipe extends CachedRecipe{
 		private final int[] outCoords = {143,51};
-		private final int[] inCoords = {40,10};
+		private final int[] inCoords1 = {40,10};
 
 		private PositionedStack output;
-		private PositionedStack inputs;
+		private List<PositionedStack> inputs;
 
 		public AspectList aspects;
 		public InfusionRecipe recipe;
@@ -239,7 +250,11 @@ public class InfusionHandler extends TemplateRecipeHandler {
 			this.aspects = recipe.getAspects();
 			this.output = new PositionedStack(recipe.getRecipeOutput(), outCoords[0], outCoords[1]);
 			this.recipe = recipe;
-			//this.inputs = new PositionedStack(recipe.catalyst, inCoords[0], inCoords[1]);
+			this.inputs.add(new PositionedStack(recipe.getRecipeInput(), inCoords1[0], inCoords1[1]));
+			calcInputPositions(recipe.getComponents());
+		}
+
+		private void calcInputPositions(ItemStack[] items) {
 
 		}
 
@@ -249,13 +264,13 @@ public class InfusionHandler extends TemplateRecipeHandler {
 		}
 
 		@Override
-		public PositionedStack getIngredient() {
+		public List<PositionedStack> getIngredients() {
 			return this.inputs;
 		}
 	}
 
 	@Override
 	public String getOverlayIdentifier(){
-		return "infusion ";
+		return "infusion";
 	}
 }
