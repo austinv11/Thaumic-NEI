@@ -145,7 +145,7 @@ public class InfusionHandler extends TemplateRecipeHandler {
 	@Override
 	public void drawExtras(int recipe) {
 		CachedInfusionRecipe r = (CachedInfusionRecipe) arecipes.get(recipe);
-		HashMap<String,int[]> map = getAspectCoords(r.aspects);
+		/*HashMap<String,int[]> map = getAspectCoords(r.aspects);
 		HashMap<String,int[]> textMap = getTextCoords(map,r.aspects);
 		int coords[] = {0,0};
 		int coords2[] = {0,0};
@@ -161,7 +161,7 @@ public class InfusionHandler extends TemplateRecipeHandler {
 		for (Aspect aspect : r.aspects.getAspects()){
 			coords2 = textMap.get(aspect.getName());
 			GuiDraw.drawString(r.aspects.getAmount(aspect)+"",coords2[0],coords2[1],0xFFFFFF, true);
-		}
+		}*/
 	}
 
 	@Override
@@ -344,7 +344,7 @@ public class InfusionHandler extends TemplateRecipeHandler {
 					this.inputs.add(new PositionedStack(items[8], inCoords2[9][0], inCoords2[9][1]));
 					this.inputs.add(new PositionedStack(items[9], inCoords2[10][0], inCoords2[10][1]));
 					this.inputs.add(new PositionedStack(items[10], inCoords2[11][0], inCoords2[11][1]));
-					this.inputs.add(new PositionedStack(items[11], inCoords2[12][0], inCoords2[12][1]));
+					this.inputs.add(new PositionedStack(items[11], inCoords2[0][0], inCoords2[0][1]));
 					break;
 			}
 		}
