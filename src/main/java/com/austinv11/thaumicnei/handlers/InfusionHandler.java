@@ -223,8 +223,8 @@ public class InfusionHandler extends TemplateRecipeHandler {
 	public class CachedInfusionRecipe extends CachedRecipe{
 		private final int[] outCoords = {74,-3};
 		private final int[] inCoords1 = {74,65};
-		private final int[][] inCoords2 = {{74,0},{0,0},{0,0},{0,65},{0,0},{0,0},
-				{74,0},{0,0},{0,0},{0,65},{0,0},{0,0}};//All the positions of items (clockwise)
+		private final int[][] inCoords2 = {{74,25},{0,0},{0,0},{114,65},{0,0},{0,0},
+				{74,105},{0,0},{0,0},{34,65},{0,0},{0,0}};//All the positions of items (clockwise)
 
 		private PositionedStack output;
 		private List<PositionedStack> inputs = new ArrayList<PositionedStack>();
@@ -338,7 +338,7 @@ public class InfusionHandler extends TemplateRecipeHandler {
 					this.inputs.add(new PositionedStack(items[2], inCoords2[3][0], inCoords2[3][1]));
 					this.inputs.add(new PositionedStack(items[3], inCoords2[4][0], inCoords2[4][1]));
 					this.inputs.add(new PositionedStack(items[4], inCoords2[5][0], inCoords2[5][1]));
-					this.inputs.add(new PositionedStack(items[5], inCoords2[6][0], inCoords2[11][1]));
+					this.inputs.add(new PositionedStack(items[5], inCoords2[6][0], inCoords2[6][1]));
 					this.inputs.add(new PositionedStack(items[6], inCoords2[7][0], inCoords2[7][1]));
 					this.inputs.add(new PositionedStack(items[7], inCoords2[8][0], inCoords2[8][1]));
 					this.inputs.add(new PositionedStack(items[8], inCoords2[9][0], inCoords2[9][1]));
