@@ -25,7 +25,7 @@ public class InfusionHandler extends TemplateRecipeHandler {
 
 	@Override
 	public String getGuiTexture() {
-		return "thaumcraft:textures/blocks/crucible3.png";
+		return "thaumcraft:textures/gui/gui_researchbook_overlay.png";
 	}
 
 	@Override
@@ -40,28 +40,14 @@ public class InfusionHandler extends TemplateRecipeHandler {
 
 	@Override
 	public void drawBackground(int recipe) {
-		GL11.glScalef(0.19f, 0.19f, 0.19f);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glScalef(2f, 2f, 2f);
 		//GL11.glColor4f(1, 1, 1, 1);
 		GuiDraw.changeTexture(getGuiTexture());
-		GuiDraw.drawTexturedModalRect(290, 200, 11, 10, 235, 240);//Actual Crucible
+		GuiDraw.drawTexturedModalRect(18, 13, 205, 75, 45, 45);//Infusion grid thingy
 
-		GuiDraw.changeTexture("thaumcraft:textures/gui/gui_research.png");
-		GL11.glScalef(5.25f, 5.25f, 5.25f);
-		GuiDraw.drawTexturedModalRect(35, 5, 0, 230, 24, 24);//Input Slot
-		GuiDraw.drawTexturedModalRect(140, 46, 55, 230, 24, 24);//Output Slot
-
-		GL11.glEnable(GL11.GL_BLEND);
-		GuiDraw.changeTexture(Reference.MOD_ID+":textures/gui/crucible_arrow_1.png");
-		GL11.glScalef(0.14f, 0.14f, 0.14f);
-		//GL11.glRotatef(135f, 0f, 0f, 1f);
-		GuiDraw.drawTexturedModalRect(730, 300, 0, 0, 250, 250);//Output Arrow
-
-		GuiDraw.changeTexture(Reference.MOD_ID+":textures/gui/crucible_arrow_2.png");
-		//GL11.glScalef(1f,1f,1f);
-		GuiDraw.drawTexturedModalRect(425, 550, 0, 0, 260, 260);//Aspect Input Arrow
-
-		GuiDraw.changeTexture(Reference.MOD_ID+":textures/gui/crucible_arrow_3.png");
-		GuiDraw.drawTexturedModalRect(425, 8, 0, 0, 260, 260);//Item Input Arrow
+		GL11.glScalef(1f, 1f, 1f);
+		GuiDraw.drawTexturedModalRect(34, -8, 21, 0, 15, 20);//Output slot
 		GL11.glDisable(GL11.GL_BLEND);
 	}
 
@@ -185,20 +171,15 @@ public class InfusionHandler extends TemplateRecipeHandler {
 			if (recipes.get(i) instanceof InfusionRecipe) {
 				InfusionRecipe recipe = (InfusionRecipe) recipes.get(i);
 				if (ThaumcraftApiHelper.isResearchComplete(Reference.PLAYER_NAME, recipe.getResearch()) || Config.cheatMode){
-					ItemStack output = (ItemStack) recipe.getRecipeOutput();
+					Object output = recipe.getRecipeOutput();
 					if (output instanceof ItemStack) {
-						ItemStack item = (ItemStack) output;
-						if (item.isItemEqual(result)) {
+						if (((ItemStack)output).isItemEqual(result)) {
 							if (checkDupe(recipe)) {
 								this.arecipes.add(new CachedInfusionRecipe(recipe));
 							}
 						}
 					}else {
-						//if (output[0].equals(result.getUnlocalizedName())) {
-						//	if (checkDupe(recipe)) {
-						//		this.arecipes.add(new CachedInfusionRecipe(recipe));
-						//	}
-						//}
+						//TODO
 					}
 				}
 			}
@@ -212,10 +193,12 @@ public class InfusionHandler extends TemplateRecipeHandler {
 			if (recipes.get(i) instanceof InfusionRecipe) {
 				InfusionRecipe recipe = (InfusionRecipe) recipes.get(i);
 				if (ThaumcraftApiHelper.isResearchComplete(Reference.PLAYER_NAME, recipe.getResearch()) || Config.cheatMode){
-					ArrayList<ItemStack> components = new ArrayList<ItemStack>(Arrays.asList(recipe.getComponents()));
-					if (recipe.getRecipeInput().isItemEqual(ingredient) || components.contains(ingredient)) {
-						if (checkDupe(recipe)) {
-							this.arecipes.add(new CachedInfusionRecipe(recipe));
+					if (recipe.getComponents() != null) {
+						ArrayList<ItemStack> components = new ArrayList<ItemStack>(Arrays.asList(recipe.getComponents()));
+						if (recipe.getRecipeInput().isItemEqual(ingredient) || components.contains(ingredient)) {
+							if (checkDupe(recipe)) {
+								this.arecipes.add(new CachedInfusionRecipe(recipe));
+							}
 						}
 					}
 				}
@@ -238,25 +221,66 @@ public class InfusionHandler extends TemplateRecipeHandler {
 	}
 
 	public class CachedInfusionRecipe extends CachedRecipe{
-		private final int[] outCoords = {143,51};
-		private final int[] inCoords1 = {40,10};
+		private final int[] outCoords = {74,-3};
+		private final int[] inCoords1 = {74,65};
+		private final int[][] inCoords2 = {{74,0},{0,0},{0,0},{0,65},{0,0},{0,0},
+				{74,0},{0,0},{0,0},{0,65},{0,0},{0,0}};//All the positions of items (clockwise)
 
 		private PositionedStack output;
-		private List<PositionedStack> inputs;
+		private List<PositionedStack> inputs = new ArrayList<PositionedStack>();
 
 		public AspectList aspects;
 		public InfusionRecipe recipe;
+		public int instability;
 
 		public CachedInfusionRecipe(InfusionRecipe recipe){
 			this.aspects = recipe.getAspects();
 			this.output = new PositionedStack(recipe.getRecipeOutput(), outCoords[0], outCoords[1]);
 			this.recipe = recipe;
+			this.instability = recipe.getInstability();
 			this.inputs.add(new PositionedStack(recipe.getRecipeInput(), inCoords1[0], inCoords1[1]));
 			calcInputPositions(recipe.getComponents());
 		}
 
 		private void calcInputPositions(ItemStack[] items) {
+			switch (items.length){
+				case 1:
 
+					break;
+				case 2:
+
+					break;
+				case 3:
+
+					break;
+				case 4:
+
+					break;
+				case 5:
+
+					break;
+				case 6:
+
+					break;
+				case 7:
+
+					break;
+				case 8:
+
+					break;
+				case 9:
+
+					break;
+				case 10:
+
+					break;
+				case 11:
+
+					break;
+				case 12:
+
+					break;
+			}
 		}
 
 		@Override

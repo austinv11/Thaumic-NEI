@@ -113,7 +113,7 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 								coords[0] = columns[2];
 							}
 						}else {
-							coords[0] = columns[i];
+							coords[0] = columns[i-1];
 						}
 					}
 				}
