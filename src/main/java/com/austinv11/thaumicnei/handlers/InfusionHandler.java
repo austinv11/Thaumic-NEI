@@ -231,7 +231,7 @@ public class InfusionHandler extends TemplateRecipeHandler {
 
 		public AspectList aspects;
 		public InfusionRecipe recipe;
-		public int instability;
+		public int instability;//TODO
 
 		public CachedInfusionRecipe(InfusionRecipe recipe){
 			this.aspects = recipe.getAspects();
@@ -245,40 +245,106 @@ public class InfusionHandler extends TemplateRecipeHandler {
 		private void calcInputPositions(ItemStack[] items) {
 			switch (items.length){
 				case 1:
-
+					this.inputs.add(new PositionedStack(items[0], inCoords2[6][0], inCoords2[6][1]));
 					break;
 				case 2:
-
+					this.inputs.add(new PositionedStack(items[0], inCoords2[3][0], inCoords2[3][1]));
+					this.inputs.add(new PositionedStack(items[1], inCoords2[9][0], inCoords2[9][1]));
 					break;
 				case 3:
-
+					this.inputs.add(new PositionedStack(items[0], inCoords2[6][0], inCoords2[6][1]));
+					this.inputs.add(new PositionedStack(items[1], inCoords2[3][0], inCoords2[3][1]));
+					this.inputs.add(new PositionedStack(items[2], inCoords2[9][0], inCoords2[9][1]));
 					break;
 				case 4:
-
+					this.inputs.add(new PositionedStack(items[0], inCoords2[6][0], inCoords2[6][1]));
+					this.inputs.add(new PositionedStack(items[1], inCoords2[3][0], inCoords2[3][1]));
+					this.inputs.add(new PositionedStack(items[2], inCoords2[9][0], inCoords2[9][1]));
+					this.inputs.add(new PositionedStack(items[3], inCoords2[0][0], inCoords2[0][1]));
 					break;
 				case 5:
-
+					this.inputs.add(new PositionedStack(items[0], inCoords2[1][0], inCoords2[1][1]));
+					this.inputs.add(new PositionedStack(items[1], inCoords2[4][0], inCoords2[4][1]));
+					this.inputs.add(new PositionedStack(items[2], inCoords2[6][0], inCoords2[6][1]));
+					this.inputs.add(new PositionedStack(items[3], inCoords2[8][0], inCoords2[8][1]));
+					this.inputs.add(new PositionedStack(items[4], inCoords2[0][0], inCoords2[0][1]));
 					break;
 				case 6:
-
+					this.inputs.add(new PositionedStack(items[0], inCoords2[0][0], inCoords2[0][1]));
+					this.inputs.add(new PositionedStack(items[1], inCoords2[2][0], inCoords2[2][1]));
+					this.inputs.add(new PositionedStack(items[2], inCoords2[4][0], inCoords2[4][1]));
+					this.inputs.add(new PositionedStack(items[3], inCoords2[6][0], inCoords2[6][1]));
+					this.inputs.add(new PositionedStack(items[4], inCoords2[8][0], inCoords2[8][1]));
+					this.inputs.add(new PositionedStack(items[5], inCoords2[10][0], inCoords2[10][1]));
 					break;
 				case 7:
-
+					this.inputs.add(new PositionedStack(items[0], inCoords2[1][0], inCoords2[1][1]));
+					this.inputs.add(new PositionedStack(items[1], inCoords2[3][0], inCoords2[3][1]));
+					this.inputs.add(new PositionedStack(items[2], inCoords2[5][0], inCoords2[5][1]));
+					this.inputs.add(new PositionedStack(items[3], inCoords2[6][0], inCoords2[6][1]));
+					this.inputs.add(new PositionedStack(items[4], inCoords2[7][0], inCoords2[7][1]));
+					this.inputs.add(new PositionedStack(items[5], inCoords2[9][0], inCoords2[9][1]));
+					this.inputs.add(new PositionedStack(items[6], inCoords2[11][0], inCoords2[11][1]));
 					break;
 				case 8:
-
+					this.inputs.add(new PositionedStack(items[0], inCoords2[1][0], inCoords2[1][1]));
+					this.inputs.add(new PositionedStack(items[1], inCoords2[2][0], inCoords2[2][1]));
+					this.inputs.add(new PositionedStack(items[2], inCoords2[4][0], inCoords2[4][1]));
+					this.inputs.add(new PositionedStack(items[3], inCoords2[5][0], inCoords2[5][1]));
+					this.inputs.add(new PositionedStack(items[4], inCoords2[7][0], inCoords2[7][1]));
+					this.inputs.add(new PositionedStack(items[5], inCoords2[8][0], inCoords2[8][1]));
+					this.inputs.add(new PositionedStack(items[6], inCoords2[10][0], inCoords2[10][1]));
+					this.inputs.add(new PositionedStack(items[7], inCoords2[11][0], inCoords2[11][1]));
 					break;
 				case 9:
-
+					this.inputs.add(new PositionedStack(items[0], inCoords2[1][0], inCoords2[1][1]));
+					this.inputs.add(new PositionedStack(items[1], inCoords2[2][0], inCoords2[2][1]));
+					this.inputs.add(new PositionedStack(items[2], inCoords2[4][0], inCoords2[4][1]));
+					this.inputs.add(new PositionedStack(items[3], inCoords2[5][0], inCoords2[5][1]));
+					this.inputs.add(new PositionedStack(items[4], inCoords2[6][0], inCoords2[6][1]));
+					this.inputs.add(new PositionedStack(items[5], inCoords2[7][0], inCoords2[7][1]));
+					this.inputs.add(new PositionedStack(items[6], inCoords2[8][0], inCoords2[8][1]));
+					this.inputs.add(new PositionedStack(items[7], inCoords2[10][0], inCoords2[10][1]));
+					this.inputs.add(new PositionedStack(items[8], inCoords2[11][0], inCoords2[11][1]));
 					break;
 				case 10:
-
+					this.inputs.add(new PositionedStack(items[0], inCoords2[1][0], inCoords2[1][1]));
+					this.inputs.add(new PositionedStack(items[1], inCoords2[2][0], inCoords2[2][1]));
+					this.inputs.add(new PositionedStack(items[2], inCoords2[3][0], inCoords2[3][1]));
+					this.inputs.add(new PositionedStack(items[3], inCoords2[4][0], inCoords2[4][1]));
+					this.inputs.add(new PositionedStack(items[4], inCoords2[5][0], inCoords2[5][1]));
+					this.inputs.add(new PositionedStack(items[5], inCoords2[7][0], inCoords2[7][1]));
+					this.inputs.add(new PositionedStack(items[6], inCoords2[8][0], inCoords2[8][1]));
+					this.inputs.add(new PositionedStack(items[7], inCoords2[9][0], inCoords2[9][1]));
+					this.inputs.add(new PositionedStack(items[8], inCoords2[10][0], inCoords2[10][1]));
+					this.inputs.add(new PositionedStack(items[9], inCoords2[11][0], inCoords2[11][1]));
 					break;
 				case 11:
-
+					this.inputs.add(new PositionedStack(items[0], inCoords2[1][0], inCoords2[1][1]));
+					this.inputs.add(new PositionedStack(items[1], inCoords2[2][0], inCoords2[2][1]));
+					this.inputs.add(new PositionedStack(items[2], inCoords2[3][0], inCoords2[3][1]));
+					this.inputs.add(new PositionedStack(items[3], inCoords2[4][0], inCoords2[4][1]));
+					this.inputs.add(new PositionedStack(items[4], inCoords2[5][0], inCoords2[5][1]));
+					this.inputs.add(new PositionedStack(items[5], inCoords2[6][0], inCoords2[11][1]));
+					this.inputs.add(new PositionedStack(items[6], inCoords2[7][0], inCoords2[7][1]));
+					this.inputs.add(new PositionedStack(items[7], inCoords2[8][0], inCoords2[8][1]));
+					this.inputs.add(new PositionedStack(items[8], inCoords2[9][0], inCoords2[9][1]));
+					this.inputs.add(new PositionedStack(items[9], inCoords2[10][0], inCoords2[10][1]));
+					this.inputs.add(new PositionedStack(items[10], inCoords2[11][0], inCoords2[11][1]));
 					break;
 				case 12:
-
+					this.inputs.add(new PositionedStack(items[0], inCoords2[1][0], inCoords2[1][1]));
+					this.inputs.add(new PositionedStack(items[1], inCoords2[2][0], inCoords2[2][1]));
+					this.inputs.add(new PositionedStack(items[2], inCoords2[3][0], inCoords2[3][1]));
+					this.inputs.add(new PositionedStack(items[3], inCoords2[4][0], inCoords2[4][1]));
+					this.inputs.add(new PositionedStack(items[4], inCoords2[5][0], inCoords2[5][1]));
+					this.inputs.add(new PositionedStack(items[5], inCoords2[6][0], inCoords2[11][1]));
+					this.inputs.add(new PositionedStack(items[6], inCoords2[7][0], inCoords2[7][1]));
+					this.inputs.add(new PositionedStack(items[7], inCoords2[8][0], inCoords2[8][1]));
+					this.inputs.add(new PositionedStack(items[8], inCoords2[9][0], inCoords2[9][1]));
+					this.inputs.add(new PositionedStack(items[9], inCoords2[10][0], inCoords2[10][1]));
+					this.inputs.add(new PositionedStack(items[10], inCoords2[11][0], inCoords2[11][1]));
+					this.inputs.add(new PositionedStack(items[11], inCoords2[12][0], inCoords2[12][1]));
 					break;
 			}
 		}
