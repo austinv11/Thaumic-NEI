@@ -145,6 +145,10 @@ public class InfusionHandler extends TemplateRecipeHandler {
 	@Override
 	public void drawExtras(int recipe) {
 		CachedInfusionRecipe r = (CachedInfusionRecipe) arecipes.get(recipe);
+		int instability = r.instability;
+		GuiDraw.drawString(StatCollector.translateToLocal("tc.inst"),0,0,0x505050, false);
+		//Logger.info(instability);
+		GuiDraw.drawString(Instability.fromInt(instability).toString(),0,9,0xFFFFFF, false);
 		/*HashMap<String,int[]> map = getAspectCoords(r.aspects);
 		HashMap<String,int[]> textMap = getTextCoords(map,r.aspects);
 		int coords[] = {0,0};
@@ -357,6 +361,63 @@ public class InfusionHandler extends TemplateRecipeHandler {
 		@Override
 		public List<PositionedStack> getIngredients() {
 			return this.inputs;
+		}
+	}
+
+	private static enum Instability {
+		NEGLIGIBLE(1),MINOR(3),MODERATE(4),HIGH(6),VERY_HIGH(8),DANGEROUS(13),ERROR(99);
+		private int value;
+		private Instability(int value) {
+			this.value = value;
+		}
+
+		@Override
+		public String toString(){
+			switch(this.value){
+				case 1:
+					return StatCollector.translateToLocal("tc.inst.0");
+				case 3:
+					return StatCollector.translateToLocal("tc.inst.1");
+				case 4:
+					return StatCollector.translateToLocal("tc.inst.2");
+				case 6:
+					return StatCollector.translateToLocal("tc.inst.3");
+				case 8:
+					return StatCollector.translateToLocal("tc.inst.4");
+				case 13:
+					return StatCollector.translateToLocal("tc.inst.5");
+				case 99:
+					return StatCollector.translateToLocal(Reference.MOD_ID+":error");
+			}
+			return null;
+		}
+
+		public static Instability fromInt(int in){
+			switch (in){
+				case 0:
+					return NEGLIGIBLE;
+				case 1:
+					return NEGLIGIBLE;
+				case 2:
+					return MINOR;
+				case 3:
+					return MINOR;
+				case 4:
+					return MODERATE;
+				case 5:
+					return MODERATE;
+				case 6:
+					return HIGH;
+				case 7:
+					return HIGH;
+				case 8:
+					return VERY_HIGH;
+				case 9:
+					return VERY_HIGH;
+				default:
+					//Logger.info(in);
+					return DANGEROUS;
+			}
 		}
 	}
 

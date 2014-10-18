@@ -6,3 +6,5 @@ thaumicnei:gui.nei.crucible=Crucible Recipes
 
 thaumicnei:filter.aspect.0=aspect
 thaumicnei:filter.aspect.1=aspects
+
+thaumicnei:error=<ERROR>
