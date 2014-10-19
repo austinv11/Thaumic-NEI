@@ -23,7 +23,7 @@ repositories{
 
 apply plugin: 'forge'
 
-version = "1.7.10-1.0.0"
+version = "1.7.10-0.1.0"
 group= "com.austinv11.thaumicnei" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "ThaumicNEI"
 
