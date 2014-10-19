@@ -3,13 +3,17 @@ package com.austinv11.thaumicnei.filters;
 import codechicken.nei.NEIClientConfig;
 import codechicken.nei.SearchField;
 import codechicken.nei.api.ItemFilter;
+import com.austinv11.thaumicnei.reference.Config;
 import com.austinv11.thaumicnei.reference.Reference;
 import com.austinv11.thaumicnei.utils.Logger;
+import net.minecraft.client.Minecraft;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.research.ScanResult;
+import thaumcraft.common.lib.research.ScanManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +31,7 @@ public class AspectFilter implements SearchField.ISearchProvider {
 		String pattern;
 		int aspectSearch = 0;
 
-		public Filter(String searchText) {//TODO: utilize the ScanManager class in TC to filter based on what the player has scanned
+		public Filter(String searchText) {
 			//Logger.info("Searching! :D");
 			if (searchText.startsWith("@"+StatCollector.translateToLocal(Reference.MOD_ID+":filter.aspect.0")+":") && searchText.length() > 8) {
 				pattern = searchText.substring(8);
@@ -41,6 +45,15 @@ public class AspectFilter implements SearchField.ISearchProvider {
 			}
 		}
 
+		private boolean isScanned(ItemStack item) {
+			try{
+				return ScanManager.hasBeenScanned(Minecraft.getMinecraft().thePlayer,new ScanResult((byte)1, Item.getIdFromItem(item.getItem()),item.getItem().getMetadata(0),null, ""));
+			}catch (Exception e) {
+
+			}
+			return false;
+		}
+
 		@Override
 		public boolean matches(ItemStack itemStack) {
 			if (pattern == null || pattern == ""){
@@ -52,7 +65,9 @@ public class AspectFilter implements SearchField.ISearchProvider {
 						for (Aspect aspect : list.getAspects()) {
 							if (aspect != null) {
 								if (pattern.equalsIgnoreCase(aspect.getName())) {
-									return true;
+									if (Config.cheatMode || isScanned(itemStack)) {
+										return true;
+									}
 								}
 							}
 						}
@@ -69,13 +84,17 @@ public class AspectFilter implements SearchField.ISearchProvider {
 									for (String p : patterns) {
 										if (aspect != null){
 											if (p.equalsIgnoreCase(aspect.getName())) {
-												match.add(true);
+												if (Config.cheatMode || isScanned(itemStack)) {
+													match.add(true);
+												}
 											}
 										}
 									}
 								}
 								if (match.size() == patterns.length) {
-									return true;
+									if (Config.cheatMode || isScanned(itemStack)) {
+										return true;
+									}
 								}else {
 									return false;
 								}
