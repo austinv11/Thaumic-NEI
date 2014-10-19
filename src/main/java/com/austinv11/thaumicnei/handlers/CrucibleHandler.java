@@ -101,6 +101,7 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 					GuiDraw.changeTexture(aspect.getImage());
 					GuiDraw.drawTexturedModalRect(coords[0], coords[1], 0, 0, 260, 260);
 					i++;
+					map.put(aspect.getName(),coords.clone());
 				}else {
 					int[] temp = {30,1205};
 					temp[0] = coords[0] + (hBuffer*h);
