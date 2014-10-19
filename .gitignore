@@ -23,3 +23,6 @@
 /*.ipr
 /*.iws
 /atlassian-ide-plugin.xml
+
+## Misc.
+/libs
