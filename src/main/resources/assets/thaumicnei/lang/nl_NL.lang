@@ -1,0 +1,12 @@
+
+thaumicnei:gui.nei.arcaneWorkbench.shaped=Occulte Recepten(met vorm) 
+thaumicnei:gui.nei.arcaneWorkbench.shapeless=Occulte Recepten(vormeloos)
+thaumicnei:gui.nei.infusion=Infusie Recepten
+thaumicnei:gui.nei.crucible=Smeltkroes Recepten
+
+thaumicnei:filter.aspect.0=aspect
+
+thaumicnei:filter.aspect.1=aspecten
+
+
+thaumicnei:error=<ERROR>

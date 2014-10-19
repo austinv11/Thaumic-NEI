@@ -1,6 +1,5 @@
 package com.austinv11.thaumicnei.filters;
 
-import codechicken.nei.NEIClientConfig;
 import codechicken.nei.SearchField;
 import codechicken.nei.api.ItemFilter;
 import com.austinv11.thaumicnei.reference.Config;
@@ -17,8 +16,6 @@ import thaumcraft.common.lib.research.ScanManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 public class AspectFilter implements SearchField.ISearchProvider {
 
