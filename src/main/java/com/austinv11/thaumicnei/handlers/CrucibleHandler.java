@@ -70,16 +70,20 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 		super.drawForeground(recipe);
 	}
 
-	private HashMap<String,int[]> getAspectCoords(AspectList aspects) {
+	private HashMap<String,int[]> getAndDrawAspects(AspectList aspects) {
 		int[] rows = {1325,1205,1535};//Y values are as follows: 1 row, 2 rows - row # 1, 2 rows - row #2
 		int[] columns = {30,330,630};//X values are as follows: column #1, column #2, column #3
-		int[] coords = {0,0};
+		int[] coords = {30,1205};
+		int hBuffer = 300;//Space between two aspects side by side
+		int vBuffer = 300;//Space between two aspects vertically
 		HashMap<String,int[]> map = new HashMap<String,int[]>();
 		int aspectNum = aspects.getAspects().length;
+		int aspectCount = aspects.getAspects().length;
 		int i = 0;
+		int h = 0,k = 0;
 		for (Aspect aspect : aspects.getAspects()) {
 			if (aspectNum != 0) {
-				if (aspectNum > 0 && aspectNum < 4) {
+				if (aspectCount > 0 && aspectCount < 4) {
 					coords[1] = rows[0];
 					if (aspectNum == 1) {
 						coords[0] = columns[1];
@@ -92,68 +96,84 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 					}else if (aspectNum == 3) {
 						coords[0] = columns[i];
 					}
+					Color color = new Color(aspect.getColor());
+					GL11.glColor4f(color.getRed()/255f, color.getGreen()/255f, color.getBlue()/255f, 1f);
+					GuiDraw.changeTexture(aspect.getImage());
+					GuiDraw.drawTexturedModalRect(coords[0], coords[1], 0, 0, 260, 260);
+					i++;
 				}else {
-					if (i >= 0 && i < 2) {
-						coords[1] = rows[1];
-						if (aspectNum == 4 ||aspectNum == 5) {
-							if (i == 0) {
-								coords[0] = columns[0];
-							}else {
-								coords[0] = columns[2];
-							}
-						}else {
-							coords[0] = columns[i];
-						}
+					int[] temp = {30,1205};
+					temp[0] = coords[0] + (hBuffer*h);
+					temp[1] = coords[1] + (vBuffer*k);
+					Color color = new Color(aspect.getColor());
+					GL11.glColor4f(color.getRed()/255f, color.getGreen()/255f, color.getBlue()/255f, 1f);
+					GuiDraw.changeTexture(aspect.getImage());
+					GuiDraw.drawTexturedModalRect(temp[0], temp[1], 0, 0, 260, 260);
+					if (h == 2) {
+						k++;
+						h = h - 2;
 					}else {
-						coords[1] = rows[2];
-						if (aspectNum == 4) {
-							if (i == 2) {
-								coords[0] = columns[0];
-							}else {
-								coords[0] = columns[2];
-							}
-						}else {
-							try {
-								coords[0] = columns[i];
-							}catch(ArrayIndexOutOfBoundsException e) {
-									//FIXME
-								}
-						}
+						h++;
 					}
 				}
 			}
-			map.put(aspect.getName(), coords.clone());
-			i++;
 		}
 		return map;
 	}
 
 	private HashMap<String,int[]> getTextCoords(HashMap<String,int[]> map, AspectList aspects) {
+		int aspectNum = aspects.getAspects().length;
+		int hBuffer = 20;//Space between two aspects side by side
+		int vBuffer = 20;//Space between two aspects vertically
+		int i = 0;
+		int[] startCoords = {11,90};
 		HashMap<String,int[]> rMap = new HashMap<String,int[]>();
 		int[] coords2 = {0,0};
 		for (Aspect aspect : aspects.getAspects()) {
-			int[] coords = map.get(aspect.getName());
-			switch (coords[0]){//TODO update coords
-				case 30:
-					coords2[0] = 11;
+			int[] coords = map.get(aspect.getName());//DEPRECATED
+			if (aspects.getAspects().length > 3) {
+				if (aspectNum > 0) {
+					if (i == 0) {
+						if (coords2[0] == 0 && coords2[1] == 0) {
+							coords2 = startCoords;
+						} else {
+							coords2[0] = coords2[0] - (hBuffer * 2);
+							coords2[1] = coords2[1] + vBuffer;
+						}
+						i++;
+					}else if (i == 1) {
+						if (coords2[0] == 0 && coords2[1] == 0) {
+							coords2 = startCoords;
+						} else {
+							coords2[0] = coords2[0] + hBuffer;
+						}
+						i++;
+					}else {
+						if (coords2[0] == 0 && coords2[1] == 0) {
+							coords2 = startCoords;
+						}else {
+							coords2[0] = coords2[0] + hBuffer;
+						}
+						i = i - 2;
+					}
+					map.put(aspect.getName(), coords2.clone());
+					aspectNum--;
+				}else {
 					break;
-				case 330:
-					coords2[0] = 31;
-					break;
-				case 630:
-					coords2[0] = 51;
-					break;
-			}
-			switch (coords[1]){//TODO update coords
-				case 1325:
-					coords2[1] = 102;
-					break;
-				case 1205:
-					coords2[1] = 90;
-					break;
-				case 1535:
-					coords2[1] = 114;
-					break;
+				}
+			}else {
+				switch (coords[0]){//FIXME DEPRECATED
+					case 30:
+						coords2[0] = 11;
+						break;
+					case 330:
+						coords2[0] = 31;
+						break;
+					case 630:
+						coords2[0] = 51;
+						break;
+				}
+				coords2[1] = 102;
 			}
 			rMap.put(aspect.getName(),coords2.clone());
 		}
@@ -163,19 +183,11 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 	@Override
 	public void drawExtras(int recipe) {
 		CachedCrucibleRecipe r = (CachedCrucibleRecipe) arecipes.get(recipe);
-		HashMap<String,int[]> map = getAspectCoords(r.aspects);
-		HashMap<String,int[]> textMap = getTextCoords(map,r.aspects);
-		int coords[] = {0,0};
 		int coords2[] = {0,0};
 		GL11.glScalef(.065f,.065f,.065f);
 		GL11.glEnable(GL11.GL_BLEND);
-		for (Aspect aspect : r.aspects.getAspects()) {
-			coords = map.get(aspect.getName());
-			Color color = new Color(aspect.getColor());
-			GL11.glColor4f(color.getRed()/255f, color.getGreen()/255f, color.getBlue()/255f, 1f);
-			GuiDraw.changeTexture(aspect.getImage());
-			GuiDraw.drawTexturedModalRect(coords[0], coords[1], 0, 0, 260, 260);
-		}
+		HashMap<String,int[]> map = getAndDrawAspects(r.aspects);
+		HashMap<String,int[]> textMap = getTextCoords(map,r.aspects);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glScalef(15.625f,15.625f,15.625f);
 		for (Aspect aspect : r.aspects.getAspects()){

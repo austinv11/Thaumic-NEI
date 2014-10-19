@@ -94,7 +94,7 @@ public class InfusionHandler extends TemplateRecipeHandler {
 	private HashMap<String,int[]> getTextCoords(AspectList aspects) {
 		int aspectNum = aspects.getAspects().length;
 		int hBuffer = 20;//Space between two aspects side by side
-		int vBuffer = 19;//Space between two aspects vertically
+		int vBuffer = 20;//Space between two aspects vertically
 		int[] startCoords = {0,38};
 		int[] coords = {0,0};
 		int i = 0;
@@ -150,7 +150,7 @@ public class InfusionHandler extends TemplateRecipeHandler {
 		GL11.glScalef(15.625f,15.625f,15.625f);
 		for (Aspect aspect : r.aspects.getAspects()){
 			coords2 = textMap.get(aspect.getName());
-			GuiDraw.drawString(r.aspects.getAmount(aspect)+"",coords2[0],coords2[1],0xFFFFFF, false);
+			GuiDraw.drawString(r.aspects.getAmount(aspect)+"",coords2[0],coords2[1],0xFFFFFF, true);
 		}
 	}
 
@@ -221,7 +221,7 @@ public class InfusionHandler extends TemplateRecipeHandler {
 
 		public AspectList aspects;
 		public InfusionRecipe recipe;
-		public int instability;//TODO
+		public int instability;
 
 		public CachedInfusionRecipe(InfusionRecipe recipe){
 			this.aspects = recipe.getAspects();
