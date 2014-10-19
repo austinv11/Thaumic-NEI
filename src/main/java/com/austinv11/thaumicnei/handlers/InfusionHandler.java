@@ -57,89 +57,73 @@ public class InfusionHandler extends TemplateRecipeHandler {
 	}
 
 	private HashMap<String,int[]> getAspectCoords(AspectList aspects) {
-		int[] rows = {1325,1205,1535};//Y values are as follows: 1 row, 2 rows - row # 1, 2 rows - row #2
-		int[] columns = {30,330,630};//X values are as follows: column #1, column #2, column #3
+		int[] startCoords = {0,400};
+		int hBuffer = 300;//Space between two aspects side by side
+		int vBuffer = 300;//Space between two aspects vertically
 		int[] coords = {0,0};
 		HashMap<String,int[]> map = new HashMap<String,int[]>();
 		int aspectNum = aspects.getAspects().length;
 		int i = 0;
 		for (Aspect aspect : aspects.getAspects()) {
-			if (aspectNum != 0) {
-				if (aspectNum > 0 && aspectNum < 4) {
-					coords[1] = rows[0];
-					if (aspectNum == 1) {
-						coords[0] = columns[1];
-					}else if (aspectNum == 2) {
-						if (i == 0) {
-							coords[0] = columns[0];
-						}else {
-							coords[0] = columns[2];
-						}
-					}else if (aspectNum == 3) {
-						coords[0] = columns[i];
-					}
-				}else {
-					if (i >= 0 && i < 2) {
-						coords[1] = rows[1];
-						if (aspectNum == 4 ||aspectNum == 5) {
-							if (i == 0) {
-								coords[0] = columns[0];
-							}else {
-								coords[0] = columns[2];
-							}
-						}else {
-							coords[0] = columns[i];
-						}
+			if (aspectNum > 0) {
+				if (i == 0) {
+					if (coords[0] == 0 && coords[1] == 0) {
+						coords = startCoords;
 					}else {
-						coords[1] = rows[2];
-						if (aspectNum == 4) {
-							if (i == 2) {
-								coords[0] = columns[0];
-							}else {
-								coords[0] = columns[2];
-							}
-						}else {
-							coords[0] = columns[i];
-						}
+						coords[0] = coords[0] - hBuffer;
+						coords[1] = coords[1] + vBuffer;
 					}
+					i++;
+				}else {
+					if (coords[0] == 0 && coords[1] == 0) {
+						coords = startCoords;
+					}else {
+						coords[0] = coords[0] + hBuffer;
+					}
+					i--;
 				}
+				map.put(aspect.getName(), coords.clone());
+				aspectNum--;
+			}else {
+				break;
 			}
-			map.put(aspect.getName(), coords.clone());
-			i++;
 		}
 		return map;
 	}
 
-	private HashMap<String,int[]> getTextCoords(HashMap<String,int[]> map, AspectList aspects) {
-		HashMap<String,int[]> rMap = new HashMap<String,int[]>();
-		int[] coords2 = {0,0};
+	private HashMap<String,int[]> getTextCoords(AspectList aspects) {
+		int aspectNum = aspects.getAspects().length;
+		int hBuffer = 20;//Space between two aspects side by side
+		int vBuffer = 19;//Space between two aspects vertically
+		int[] startCoords = {0,38};
+		int[] coords = {0,0};
+		int i = 0;
+		HashMap<String,int[]> map = new HashMap<String,int[]>();
 		for (Aspect aspect : aspects.getAspects()) {
-			int[] coords = map.get(aspect.getName());
-			switch (coords[0]){//TODO update coords
-				case 30:
-					coords2[0] = 11;
-					break;
-				case 330:
-					coords2[0] = 31;
-					break;
-				case 630:
-					coords2[0] = 51;
-					break;
+			if (aspectNum > 0) {
+				if (i == 0) {
+					if (coords[0] == 0 && coords[1] == 0) {
+						coords = startCoords;
+					}else {
+						coords[0] = coords[0] - hBuffer;
+						coords[1] = coords[1] + vBuffer;
+					}
+					i++;
+				}else {
+					if (coords[0] == 0 && coords[1] == 0) {
+						coords = startCoords;
+					}else {
+						coords[0] = coords[0] + hBuffer;
+					}
+					i--;
+				}
+				map.put(aspect.getName(), coords.clone());
+				aspectNum--;
+			}else {
+				break;
 			}
-			switch (coords[1]){//TODO update coords
-				case 1325:
-					coords2[1] = 102;
-					break;
-				case 1205:
-					coords2[1] = 90;
-					break;
-				case 1535:
-					coords2[1] = 114;
-					break;
-			}
-			rMap.put(aspect.getName(),coords2.clone());
 		}
-		return rMap;
+		return map;
 	}
 
 	@Override
@@ -149,11 +133,12 @@ public class InfusionHandler extends TemplateRecipeHandler {
 		GuiDraw.drawString(StatCollector.translateToLocal("tc.inst"),0,0,0x505050, false);
 		//Logger.info(instability);
 		GuiDraw.drawString(Instability.fromInt(instability).toString(),0,9,0xFFFFFF, false);
-		/*HashMap<String,int[]> map = getAspectCoords(r.aspects);
-		HashMap<String,int[]> textMap = getTextCoords(map,r.aspects);
+		HashMap<String,int[]> map = getAspectCoords(r.aspects);
+		HashMap<String,int[]> textMap = getTextCoords(r.aspects);
 		int coords[] = {0,0};
 		int coords2[] = {0,0};
 		GL11.glScalef(.065f,.065f,.065f);
+		GL11.glEnable(GL11.GL_BLEND);
 		for (Aspect aspect : r.aspects.getAspects()) {
 			coords = map.get(aspect.getName());
 			Color color = new Color(aspect.getColor());
@@ -161,11 +146,12 @@ public class InfusionHandler extends TemplateRecipeHandler {
 			GuiDraw.changeTexture(aspect.getImage());
 			GuiDraw.drawTexturedModalRect(coords[0], coords[1], 0, 0, 260, 260);
 		}
+		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glScalef(15.625f,15.625f,15.625f);
 		for (Aspect aspect : r.aspects.getAspects()){
 			coords2 = textMap.get(aspect.getName());
-			GuiDraw.drawString(r.aspects.getAmount(aspect)+"",coords2[0],coords2[1],0xFFFFFF, true);
-		}*/
+			GuiDraw.drawString(r.aspects.getAmount(aspect)+"",coords2[0],coords2[1],0xFFFFFF, false);
+		}
 	}
 
 	@Override

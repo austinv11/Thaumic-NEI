@@ -168,6 +168,7 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 		int coords[] = {0,0};
 		int coords2[] = {0,0};
 		GL11.glScalef(.065f,.065f,.065f);
+		GL11.glEnable(GL11.GL_BLEND);
 		for (Aspect aspect : r.aspects.getAspects()) {
 			coords = map.get(aspect.getName());
 			Color color = new Color(aspect.getColor());
@@ -175,6 +176,7 @@ public class CrucibleHandler extends TemplateRecipeHandler {
 			GuiDraw.changeTexture(aspect.getImage());
 			GuiDraw.drawTexturedModalRect(coords[0], coords[1], 0, 0, 260, 260);
 		}
+		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glScalef(15.625f,15.625f,15.625f);
 		for (Aspect aspect : r.aspects.getAspects()){
 			coords2 = textMap.get(aspect.getName());

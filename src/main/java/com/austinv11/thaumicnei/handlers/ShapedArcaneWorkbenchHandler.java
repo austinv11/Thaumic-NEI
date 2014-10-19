@@ -79,6 +79,7 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 			}
 		}
 		GL11.glScalef(.065f,.065f,.065f);
+		GL11.glEnable(GL11.GL_BLEND);
 		for (Aspect aspect : r.aspects.getAspects()){
 			if (aspect.isPrimal()) {
 				if (aspect.getName().equalsIgnoreCase("Ignis")) {//Oh no, no switch statement! D:
@@ -106,6 +107,7 @@ public class ShapedArcaneWorkbenchHandler extends TemplateRecipeHandler {
 				GuiDraw.drawTexturedModalRect(coords[0], coords[1], coords[2], coords[3], coords[4], coords[5]);
 			}
 		}
+		GL11.glDisable(GL11.GL_BLEND);
 	}
 
 	@Override
