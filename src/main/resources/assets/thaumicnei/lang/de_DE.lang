@@ -1,0 +1,10 @@
+
+thaumicnei:gui.nei.arcaneWorkbench.shaped=Geformte Arkane Herstellung
+thaumicnei:gui.nei.arcaneWorkbench.shapeless=Formlose Arkane Herstellung
+thaumicnei:gui.nei.infusion=Infusions Rezept
+thaumicnei:gui.nei.crucible=Tiegel Rezept
+
+thaumicnei:filter.aspect.0=aspekt
+thaumicnei:filter.aspect.1=aspekte
+
+thaumicnei:error=<FEHLER>
