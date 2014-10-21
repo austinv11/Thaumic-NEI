@@ -17,9 +17,9 @@ public class NEIThaumicConfig implements IConfigureNEI {
 	@Override
 	public void loadConfig(){
 		//API.registerRecipeHandler();
-		//if (Config.cheatMode) {
-		API.addSearchProvider(new AspectFilter());
-		//}
+		if (Config.filter) {
+			API.addSearchProvider(new AspectFilter());
+		}
 		if (!Config.hideNonResearched){
 			//API.addSearchProvider(new ThaumItemFilter());TODO
 		}
