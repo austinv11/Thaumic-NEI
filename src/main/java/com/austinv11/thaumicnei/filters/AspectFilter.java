@@ -37,7 +37,7 @@ public class AspectFilter implements SearchField.ISearchProvider {
 				pattern = searchText.substring(9);
 				aspectSearch = 2;
 			}else{
-				pattern = searchText;
+				pattern = null;
 				aspectSearch = 0;
 			}
 		}
@@ -53,7 +53,7 @@ public class AspectFilter implements SearchField.ISearchProvider {
 
 		@Override
 		public boolean matches(ItemStack itemStack) {
-			if (pattern == null || pattern == ""){
+			if (pattern == null || pattern == "" || aspectSearch == 0){
 				return true;
 			}else{
 				if (aspectSearch == 1) {//@aspect:
@@ -109,7 +109,7 @@ public class AspectFilter implements SearchField.ISearchProvider {
 					return true;
 				}
 			}
-			return false;
+			return true;
 		}
 	}
 }
