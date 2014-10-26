@@ -1,0 +1,9 @@
+thaumicnei:gui.nei.arcaneWorkbench.shaped=고정된 마법 레시피
+thaumicnei:gui.nei.arcaneWorkbench.shapeless=자유로운 마법 레시피
+thaumicnei:gui.nei.infusion=주입 레시피
+thaumicnei:gui.nei.crucible=도가니 레시피
+
+thaumicnei:filter.aspect.0=위상
+thaumicnei:filter.aspect.1=위상
+
+thaumicnei:error=<에러>
